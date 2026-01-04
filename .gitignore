@@ -36,6 +36,9 @@ Thumbs.db
 /build/
 /dist/
 
+# GoReleaser
+dist/
+
 # Test data (keep structure, ignore content)
 test-kiro-data/cache/*
 test-kiro-data/logs/*
