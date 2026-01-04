@@ -1,0 +1,107 @@
+{
+  "version": "1.0.0",
+  "kiro_paths": {
+    "auto_detect": true,
+    "custom_paths": []
+  },
+  "cleanup_rules": [
+    {
+      "name": "temp_file_cleanup",
+      "description": "清理临时文件",
+      "priority": 1,
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "file_type",
+          "field": "file_type",
+          "operator": "=",
+          "value": "temp",
+          "logic_op": "AND"
+        }
+      ],
+      "actions": [
+        {
+          "type": "delete",
+          "backup": false
+        }
+      ]
+    },
+    {
+      "name": "old_log_cleanup",
+      "description": "清理7天前的日志文件",
+      "priority": 2,
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "file_age",
+          "field": "modified",
+          "operator": ">",
+          "value": "168h",
+          "logic_op": "AND"
+        },
+        {
+          "type": "file_type",
+          "field": "file_type",
+          "operator": "=",
+          "value": "log",
+          "logic_op": "AND"
+        }
+      ],
+      "actions": [
+        {
+          "type": "delete",
+          "backup": true
+        }
+      ]
+    },
+    {
+      "name": "large_cache_cleanup",
+      "description": "清理大于100MB的缓存文件",
+      "priority": 3,
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "file_type",
+          "field": "file_type",
+          "operator": "=",
+          "value": "cache",
+          "logic_op": "AND"
+        },
+        {
+          "type": "file_size",
+          "field": "size",
+          "operator": ">",
+          "value": 104857600,
+          "logic_op": "AND"
+        }
+      ],
+      "actions": [
+        {
+          "type": "delete",
+          "backup": true
+        }
+      ]
+    }
+  ],
+  "backup_config": {
+    "enabled": true,
+    "path": "~/.kiro-cleaner/backups",
+    "max_backups": 5,
+    "compressed": true,
+    "auto_cleanup": true,
+    "schedule": "manual"
+  },
+  "safety_checks": {
+    "min_disk_space": "100MB",
+    "verify_database": true,
+    "require_confirmation": true,
+    "backup_before_delete": true,
+    "max_concurrent_ops": 3
+  },
+  "ui": {
+    "show_progress": true,
+    "detailed_output": false,
+    "color_output": true,
+    "pause_between_steps": false
+  }
+}

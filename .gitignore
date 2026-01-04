@@ -1,0 +1,62 @@
+# Binaries
+kiro-cleaner
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+
+# Go workspace file
+go.work
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.vscode/settings.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build output
+/build/
+/dist/
+
+# Test data (keep structure, ignore content)
+test-kiro-data/cache/*
+test-kiro-data/logs/*
+test-kiro-data/temp/*
+!test-kiro-data/cache/.gitkeep
+!test-kiro-data/logs/.gitkeep
+!test-kiro-data/temp/.gitkeep
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Log files
+*.log
+
+# Local config
+.env
+.env.local
+config.local.json
+
+# Temporary files
+tmp/
+temp/
