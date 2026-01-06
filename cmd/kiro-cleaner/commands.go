@@ -349,8 +349,25 @@ func runClean(cmd *cobra.Command, args []string) error {
 	
 	for i, item := range toClean {
 		// 显示进度
-		fmt.Printf("\r  清理中... %d/%d", i+1, len(toClean))
+		fmt.Printf("\r  Cleaning... %d/%d", i+1, len(toClean))
 		
+		// 检查文件是否存在
+		info, err := os.Stat(item.path)
+		if err != nil {
+			if os.IsNotExist(err) {
+				// 文件已不存在，跳过
+				continue
+			}
+			errors = append(errors, fmt.Sprintf("%s: %v", item.path, err))
+			continue
+		}
+		
+		// 跳过目录
+		if info.IsDir() {
+			continue
+		}
+		
+		// 尝试删除文件
 		if err := os.Remove(item.path); err != nil {
 			errors = append(errors, fmt.Sprintf("%s: %v", item.path, err))
 		} else {
@@ -369,10 +386,16 @@ func runClean(cmd *cobra.Command, args []string) error {
 	
 	if len(errors) > 0 {
 		fmt.Printf("[ERROR] %d files failed to clean\n", len(errors))
-		if verbose {
-			for _, e := range errors {
-				fmt.Println("   " + e)
-			}
+		// 显示前5个错误
+		showCount := 5
+		if len(errors) < showCount {
+			showCount = len(errors)
+		}
+		for i := 0; i < showCount; i++ {
+			fmt.Println("   " + errors[i])
+		}
+		if len(errors) > 5 {
+			fmt.Printf("   ... and %d more errors (use -v to see all)\n", len(errors)-5)
 		}
 	}
 	
