@@ -244,6 +244,7 @@ func (cs *ChatScanner) countMessageTypes(stats *types.ConversationStats) {
 }
 
 // FindCleanableConversations 查找可清理的对话
+// ageDays=0 表示返回所有会话，sizeBytes=0 表示不按大小过滤
 func (cs *ChatScanner) FindCleanableConversations(ageDays int, sizeBytes int64) ([]types.CleanableConversation, error) {
 	if cs.basePath == "" {
 		if _, err := cs.FindKiroAgentPath(); err != nil {
@@ -252,7 +253,10 @@ func (cs *ChatScanner) FindCleanableConversations(ageDays int, sizeBytes int64) 
 	}
 
 	var cleanable []types.CleanableConversation
-	cutoffTime := time.Now().AddDate(0, 0, -ageDays)
+	var cutoffTime time.Time
+	if ageDays > 0 {
+		cutoffTime = time.Now().AddDate(0, 0, -ageDays)
+	}
 
 	entries, err := os.ReadDir(cs.basePath)
 	if err != nil {
@@ -286,15 +290,24 @@ func (cs *ChatScanner) FindCleanableConversations(ageDays int, sizeBytes int64) 
 				continue
 			}
 
-			// 检查是否符合清理条件
-			if fileInfo.ModTime().Before(cutoffTime) {
+			// ageDays=0 表示返回所有会话
+			if ageDays == 0 {
+				cleanable = append(cleanable, types.CleanableConversation{
+					Path:    chatPath,
+					Size:    fileInfo.Size(),
+					ModTime: fileInfo.ModTime(),
+					Reason:  "all",
+				})
+			} else if fileInfo.ModTime().Before(cutoffTime) {
+				// 检查是否符合年龄条件
 				cleanable = append(cleanable, types.CleanableConversation{
 					Path:    chatPath,
 					Size:    fileInfo.Size(),
 					ModTime: fileInfo.ModTime(),
 					Reason:  "old",
 				})
-			} else if fileInfo.Size() > sizeBytes {
+			} else if sizeBytes > 0 && fileInfo.Size() > sizeBytes {
+				// 检查是否符合大小条件
 				cleanable = append(cleanable, types.CleanableConversation{
 					Path:    chatPath,
 					Size:    fileInfo.Size(),

@@ -13,6 +13,7 @@ const (
 	TypeTemp
 	TypeImage
 	TypeBackup
+	TypeIndex    // 代码索引文件
 	TypeUnknown
 )
 

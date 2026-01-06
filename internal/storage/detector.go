@@ -108,36 +108,99 @@ func (sd *StorageDetector) DetectFileTypes(path string) (map[string]types.FileTy
 		
 		ext := strings.ToLower(filepath.Ext(filePath))
 		name := strings.ToLower(info.Name())
+		pathLower := strings.ToLower(filePath)
 		
 		switch {
+		// 数据库文件
 		case ext == ".db" || ext == ".sqlite" || ext == ".sqlite3" || ext == ".vscdb":
-			fileTypes[filePath] = types.TypeDatabase
+			// 区分索引数据库和普通数据库
+			if strings.Contains(pathLower, "/index/") || strings.Contains(pathLower, "lancedb") {
+				fileTypes[filePath] = types.TypeIndex
+			} else {
+				fileTypes[filePath] = types.TypeDatabase
+			}
 		case ext == ".chat":
-			// .chat 文件是对话数据，归类为数据库类型
 			fileTypes[filePath] = types.TypeDatabase
+		
+		// 索引文件（向量数据库等）
+		case strings.Contains(pathLower, "/index/") || 
+			strings.Contains(pathLower, "lancedb") ||
+			ext == ".lance" || ext == ".manifest" || ext == ".txn":
+			fileTypes[filePath] = types.TypeIndex
+			
+		// 代码差异/历史版本缓存（kiroagent 目录下非 .chat 文件）
+		case strings.Contains(pathLower, "kiro.kiroagent") && 
+			!strings.HasSuffix(name, ".chat") &&
+			!strings.Contains(pathLower, "/index/") &&
+			!strings.Contains(pathLower, "lancedb") &&
+			!strings.Contains(pathLower, "workspace-sessions") &&
+			!strings.Contains(pathLower, "dev_data") &&
+			!strings.Contains(pathLower, "/default/"):
+			fileTypes[filePath] = types.TypeCache
+			
+		// 配置文件（不应删除）
+		case name == "config.json" || name == "settings.json" || name == "mcp.json" ||
+			name == "preferences" || name == "machineid" || name == "machineid.json" ||
+			name == "languagepacks.json" || name == "code.lock":
+			fileTypes[filePath] = types.TypeConfig
+			
+		// 日志文件
+		case ext == ".log" || strings.Contains(pathLower, "/logs/") || strings.Contains(name, ".log"):
+			fileTypes[filePath] = types.TypeLog
+			
+		// 临时文件和崩溃报告
+		case ext == ".tmp" || ext == ".temp" || name == "temp" ||
+			strings.Contains(pathLower, "crashpad") ||
+			strings.HasPrefix(name, ".dev.kiro.desktop") ||
+			name == "code.lock" || ext == ".sock":
+			fileTypes[filePath] = types.TypeTemp
+			
+		// Electron/Chrome 数据文件（可清理但可能影响登录）
+		case name == "cookies" || name == "cookies-journal" ||
+			name == "dips" || name == "dips-wal" ||
+			name == "sharedstorage" || name == "sharedstorage-wal" ||
+			name == "trust tokens" || name == "trust tokens-journal" ||
+			name == "network persistent state" || name == "transportsecurity":
+			fileTypes[filePath] = types.TypeCache
+			
+		// 缓存文件（各种缓存目录）
+		case strings.Contains(pathLower, "cache") ||
+			strings.Contains(pathLower, "cacheddata") ||
+			strings.Contains(pathLower, "cachedprofilesdata") ||
+			strings.Contains(pathLower, "gpucache") ||
+			strings.Contains(pathLower, "dawnwebgpucache") ||
+			strings.Contains(pathLower, "dawngraphitecache") ||
+			strings.Contains(pathLower, "code cache") ||
+			strings.Contains(pathLower, "service worker") ||
+			strings.Contains(pathLower, "local storage") ||
+			strings.Contains(pathLower, "webstorage") ||
+			strings.Contains(pathLower, "session storage") ||
+			strings.Contains(pathLower, "blob_storage") ||
+			strings.Contains(pathLower, "shared dictionary") ||
+			strings.Contains(pathLower, "leveldb") ||
+			ext == ".ldb" || ext == ".sst": // LevelDB 文件
+			fileTypes[filePath] = types.TypeCache
+			
+		// 历史文件
+		case strings.Contains(pathLower, "history"):
+			fileTypes[filePath] = types.TypeBackup
+			
+		// 图片文件
+		case ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".webp":
+			fileTypes[filePath] = types.TypeImage
+			
+		// 备份文件
+		case ext == ".zip" || ext == ".tar" || ext == ".gz" || strings.Contains(name, "backup"):
+			fileTypes[filePath] = types.TypeBackup
+			
+		// 其他 JSON/配置文件
 		case ext == ".json" || ext == ".xml" || ext == ".yaml" || ext == ".yml":
-			// 区分配置文件和普通 JSON
-			if name == "config.json" || name == "settings.json" || name == "mcp.json" {
-				fileTypes[filePath] = types.TypeConfig
-			} else if strings.Contains(name, "session") {
-				fileTypes[filePath] = types.TypeDatabase // 会话数据
+			if strings.Contains(name, "session") {
+				fileTypes[filePath] = types.TypeDatabase
 			} else {
 				fileTypes[filePath] = types.TypeConfig
 			}
-		case ext == ".log" || name == "log" || strings.Contains(name, ".log"):
-			fileTypes[filePath] = types.TypeLog
-		case ext == ".tmp" || ext == ".temp" || name == "temp":
-			fileTypes[filePath] = types.TypeTemp
-		case strings.Contains(name, "cache") || strings.Contains(filePath, "Cache") || strings.Contains(filePath, "CachedData"):
-			fileTypes[filePath] = types.TypeCache
-		case strings.Contains(filePath, "Crashpad"):
-			fileTypes[filePath] = types.TypeTemp // 崩溃报告可以清理
-		case strings.Contains(filePath, "History"):
-			fileTypes[filePath] = types.TypeBackup // 历史文件
-		case ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".webp":
-			fileTypes[filePath] = types.TypeImage
-		case ext == ".zip" || ext == ".tar" || ext == ".gz" || strings.Contains(name, "backup"):
-			fileTypes[filePath] = types.TypeBackup
+			
 		default:
 			fileTypes[filePath] = types.TypeUnknown
 		}
