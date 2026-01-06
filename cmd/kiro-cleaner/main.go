@@ -36,7 +36,6 @@ var (
 func getLongDescription() string {
 	// Colors
 	cyan := color.New(color.FgHiCyan, color.Bold).SprintFunc()
-	magenta := color.New(color.FgHiMagenta, color.Bold).SprintFunc()
 	green := color.New(color.FgHiGreen, color.Bold).SprintFunc()
 	yellow := color.New(color.FgHiYellow, color.Bold).SprintFunc()
 	blue := color.New(color.FgHiBlue, color.Bold).SprintFunc()
@@ -51,13 +50,11 @@ func getLongDescription() string {
 
 %s
   %s     %s
-  %s   %s
-  %s  %s
   %s    %s
 
 %s
   %s kiro-cleaner scan
-  %s kiro-cleaner status --detailed
+  %s kiro-cleaner scan --detailed
   %s kiro-cleaner clean --dry-run
   %s kiro-cleaner clean --temp --logs --force
 
@@ -68,11 +65,7 @@ func getLongDescription() string {
 		white("Safely clean Kiro IDE storage: conversations, cache, logs, and temp files."),
 		yellow("⚡ Quick Start:"),
 		green("scan"),
-		white("Scan storage usage and show summary"),
-		blue("status"),
-		white("View detailed status with recommendations"),
-		magenta("analyze"),
-		white("Deep analysis of data redundancy"),
+		white("Scan storage usage (use --detailed for full analysis)"),
 		red("clean"),
 		white("Clean up redundant files"),
 		yellow("📋 Examples:"),

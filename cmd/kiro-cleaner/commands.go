@@ -10,35 +10,23 @@ import (
 	"github.com/vibe-coding-labs/kiro-cleaner/internal/scanner"
 	"github.com/vibe-coding-labs/kiro-cleaner/internal/storage"
 	"github.com/vibe-coding-labs/kiro-cleaner/internal/ui"
+	"github.com/vibe-coding-labs/kiro-cleaner/internal/utils"
 	"github.com/vibe-coding-labs/kiro-cleaner/pkg/types"
 )
 
-// statusCmd status command
-var statusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "View Kiro data status and recommendations",
-	Long: `View detailed status of Kiro data including:
-- Conversation statistics
-- Storage usage breakdown
-- Redundancy analysis
-- Cleanup recommendations`,
-	RunE: runStatus,
-}
-
-// scanCmd scan command
+// scanCmd scan command - 统一的扫描命令
 var scanCmd = &cobra.Command{
 	Use:   "scan",
-	Short: "Scan storage usage",
-	Long:  `Scan Kiro application storage usage, analyze file sizes and counts by type`,
-	RunE:  runScan,
-}
+	Short: "Scan storage usage and show status",
+	Long: `Scan Kiro application storage usage and show status report.
 
-// analyzeCmd analyze command
-var analyzeCmd = &cobra.Command{
-	Use:   "analyze",
-	Short: "Analyze data redundancy",
-	Long:  `Deep analysis of Kiro data redundancy with detailed report`,
-	RunE:  runAnalyze,
+By default shows a summary of storage usage.
+Use --detailed for full analysis including redundancy detection and cleanup recommendations.
+
+Examples:
+  kiro-cleaner scan              # Quick summary
+  kiro-cleaner scan --detailed   # Full analysis with recommendations`,
+	RunE: runScan,
 }
 
 // cleanCmd clean command
@@ -58,15 +46,13 @@ Use --force to skip confirmation`,
 
 func init() {
 	// Add subcommands
-	rootCmd.AddCommand(statusCmd)
 	rootCmd.AddCommand(scanCmd)
-	rootCmd.AddCommand(analyzeCmd)
 	rootCmd.AddCommand(cleanCmd)
 	
-	// Status command flags
-	statusCmd.Flags().BoolVar(&detailed, "detailed", false, "Show detailed information")
-	statusCmd.Flags().BoolVar(&showConversations, "conversations", false, "Show conversation details")
-	statusCmd.Flags().IntVar(&conversationLimit, "limit", 10, "Limit number of conversations shown")
+	// Scan command flags
+	scanCmd.Flags().BoolVar(&detailed, "detailed", false, "Show detailed analysis with recommendations")
+	scanCmd.Flags().BoolVar(&showConversations, "conversations", false, "Show conversation details")
+	scanCmd.Flags().IntVar(&conversationLimit, "limit", 10, "Limit number of conversations shown")
 	
 	// Clean command flags
 	cleanCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview mode, no actual deletion")
@@ -94,10 +80,13 @@ var (
 // 创建渲染器
 var renderer = ui.NewRenderer()
 
-// runStatus 运行状态查看
-func runStatus(cmd *cobra.Command, args []string) error {
-	// 显示扫描中的提示
-	fmt.Println("Scanning Kiro data...")
+// runScan 运行扫描（统一命令）
+func runScan(cmd *cobra.Command, args []string) error {
+	if detailed {
+		fmt.Println("Analyzing Kiro data...")
+	} else {
+		fmt.Println("Scanning Kiro storage...")
+	}
 	fmt.Println()
 	
 	// 1. 扫描文件系统
@@ -126,85 +115,19 @@ func runStatus(cmd *cobra.Command, args []string) error {
 		convStats = &types.ConversationStats{}
 	}
 	
-	// 4. 查找可清理的对话
-	cleanable, err := chatScanner.FindCleanableConversations(30, 1024*1024)
-	if err != nil {
-		cleanable = []types.CleanableConversation{}
-	}
-	
-	// 5. 显示结果
-	displayStatusPretty(stats, convStats, cleanable, files)
-	
-	return nil
-}
-
-// runScan 运行扫描
-func runScan(cmd *cobra.Command, args []string) error {
-	fmt.Println("Scanning Kiro storage...")
-	fmt.Println()
-	
-	// 扫描文件系统
-	fileScanner := scanner.NewFileScanner()
-	files, err := fileScanner.Scan()
-	if err != nil && verbose {
-		fmt.Println(renderer.RenderWarning(fmt.Sprintf("扫描文件失败: %v", err)))
-	}
-	
-	stats, err := fileScanner.GetStorageStats()
-	if err != nil {
-		if verbose {
-			fmt.Println(renderer.RenderWarning(fmt.Sprintf("获取统计失败: %v", err)))
+	// 4. 根据模式显示不同详细程度的结果
+	if detailed {
+		// 详细模式：显示完整分析报告（原 status + analyze 功能）
+		cleanable, err := chatScanner.FindCleanableConversations(30, 1024*1024)
+		if err != nil {
+			cleanable = []types.CleanableConversation{}
 		}
-		stats = &types.StorageStats{FileCounts: make(map[string]int)}
+		displayDetailedReport(stats, convStats, cleanable, files)
+	} else {
+		// 简洁模式：显示存储概览
+		displayScanSummary(stats, convStats, files)
 	}
 	
-	// 扫描对话数据
-	chatScanner := scanner.NewChatScanner()
-	convStats, err := chatScanner.GetConversationStats()
-	if err != nil {
-		if verbose {
-			fmt.Println(renderer.RenderWarning(fmt.Sprintf("扫描对话数据失败: %v", err)))
-		}
-		convStats = &types.ConversationStats{}
-	}
-	
-	displayScanPretty(stats, convStats, files)
-	return nil
-}
-
-// runAnalyze 运行分析
-func runAnalyze(cmd *cobra.Command, args []string) error {
-	fmt.Println("Analyzing Kiro data redundancy...")
-	fmt.Println()
-	
-	// 文件系统分析
-	fileScanner := scanner.NewFileScanner()
-	analysis, err := fileScanner.Analyze()
-	if err != nil {
-		if verbose {
-			fmt.Println(renderer.RenderWarning(fmt.Sprintf("分析失败: %v", err)))
-		}
-		analysis = &types.AnalysisResult{
-			StorageStats: &types.StorageStats{FileCounts: make(map[string]int)},
-		}
-	}
-	
-	// 对话数据分析
-	chatScanner := scanner.NewChatScanner()
-	convStats, err := chatScanner.GetConversationStats()
-	if err != nil {
-		if verbose {
-			fmt.Println(renderer.RenderWarning(fmt.Sprintf("扫描对话数据失败: %v", err)))
-		}
-		convStats = &types.ConversationStats{}
-	}
-	
-	cleanable, err := chatScanner.FindCleanableConversations(30, 1024*1024)
-	if err != nil {
-		cleanable = []types.CleanableConversation{}
-	}
-	
-	displayAnalyzePretty(analysis, convStats, cleanable)
 	return nil
 }
 
@@ -212,7 +135,47 @@ func runAnalyze(cmd *cobra.Command, args []string) error {
 func runClean(cmd *cobra.Command, args []string) error {
 	fmt.Println(renderer.RenderHeader("Kiro Data Cleanup"))
 	fmt.Println()
-	
+
+	// 检测 Kiro 是否正在运行
+	running, processes, err := utils.IsKiroRunning()
+	if err != nil {
+		fmt.Println(renderer.RenderWarning(fmt.Sprintf("检测 Kiro 进程失败: %v", err)))
+	}
+
+	if running {
+		fmt.Println(renderer.RenderWarning(fmt.Sprintf("检测到 Kiro 正在运行 (%d 个进程)", len(processes))))
+		fmt.Println("  清理时 Kiro 可能锁定数据库文件，建议先关闭 Kiro")
+		fmt.Println()
+
+		if !dryRun && !force {
+			fmt.Print("是否自动关闭 Kiro 后继续清理? [y/N]: ")
+			var input string
+			fmt.Scanln(&input)
+			if input == "y" || input == "Y" {
+				fmt.Println("正在关闭 Kiro...")
+				if err := utils.StopKiro(true); err != nil {
+					fmt.Println(renderer.RenderError(fmt.Sprintf("关闭 Kiro 失败: %v", err)))
+					fmt.Println("  请手动关闭 Kiro 后重试")
+					return nil
+				}
+				fmt.Println(renderer.RenderSuccess("Kiro 已关闭"))
+				fmt.Println()
+			} else {
+				fmt.Println("已取消，请手动关闭 Kiro 后重试")
+				return nil
+			}
+		} else if force {
+			// force 模式下自动关闭
+			fmt.Println("正在关闭 Kiro...")
+			if err := utils.StopKiro(true); err != nil {
+				fmt.Println(renderer.RenderWarning(fmt.Sprintf("关闭 Kiro 失败: %v", err)))
+			} else {
+				fmt.Println(renderer.RenderSuccess("Kiro 已关闭"))
+			}
+			fmt.Println()
+		}
+	}
+
 	// 扫描文件
 	fileScanner := scanner.NewFileScanner()
 	files, err := fileScanner.Scan()
@@ -409,10 +372,35 @@ type cleanItem struct {
 	reason string
 }
 
-// displayStatusPretty 美化显示状态
-func displayStatusPretty(stats *types.StorageStats, convStats *types.ConversationStats, cleanable []types.CleanableConversation, files []types.FileInfo) {
+// displayScanSummary 显示扫描摘要（简洁模式）
+func displayScanSummary(stats *types.StorageStats, convStats *types.ConversationStats, files []types.FileInfo) {
 	// 头部
-	fmt.Println(renderer.RenderHeader("Kiro Data Status Report"))
+	fmt.Println(renderer.RenderHeader("Kiro Storage Summary"))
+	fmt.Println()
+	
+	// 表格数据
+	headers := []string{"Type", "Size", "Count"}
+	rows := [][]string{
+		{"Total", storage.FormatSize(stats.TotalSize + convStats.TotalSize), fmt.Sprintf("%d", len(files)+convStats.TotalConversations)},
+		{"Conversations", storage.FormatSize(convStats.TotalSize), fmt.Sprintf("%d", convStats.TotalConversations)},
+		{"Cache", storage.FormatSize(stats.CacheSize), fmt.Sprintf("%d", stats.FileCounts["缓存"])},
+		{"Logs", storage.FormatSize(stats.LogSize), fmt.Sprintf("%d", stats.FileCounts["日志"])},
+		{"Temp Files", storage.FormatSize(stats.TempSize), fmt.Sprintf("%d", stats.FileCounts["临时"])},
+	}
+	
+	fmt.Println(renderer.RenderTable(headers, rows))
+	
+	// 对话统计
+	fmt.Printf("\n  Total Messages: %d\n", convStats.TotalMessages)
+	fmt.Printf("  Workspaces: %d\n", len(convStats.WorkspaceBreakdown))
+	fmt.Println()
+	fmt.Println("  Tip: Use --detailed for full analysis with cleanup recommendations")
+}
+
+// displayDetailedReport 显示详细报告（详细模式）
+func displayDetailedReport(stats *types.StorageStats, convStats *types.ConversationStats, cleanable []types.CleanableConversation, files []types.FileInfo) {
+	// 头部
+	fmt.Println(renderer.RenderHeader("Kiro Data Analysis Report"))
 	fmt.Println()
 	
 	// 存储统计
@@ -421,8 +409,8 @@ func displayStatusPretty(stats *types.StorageStats, convStats *types.Conversatio
 	// 对话统计
 	fmt.Println(renderer.RenderConversationStats(convStats))
 	
-	// 工作区分解（详细模式）
-	if detailed && len(convStats.WorkspaceBreakdown) > 0 {
+	// 工作区分解
+	if len(convStats.WorkspaceBreakdown) > 0 {
 		fmt.Println(renderer.RenderWorkspaceBreakdown(convStats.WorkspaceBreakdown))
 	}
 	
@@ -459,106 +447,19 @@ func displayStatusPretty(stats *types.StorageStats, convStats *types.Conversatio
 	// 建议
 	var recommendations []string
 	if oldCount > 0 {
-		recommendations = append(recommendations, fmt.Sprintf("Found %d old conversations (>30 days), consider cleaning", oldCount))
+		recommendations = append(recommendations, fmt.Sprintf("Found %d old conversations (>30 days), consider: kiro-cleaner clean --chats", oldCount))
 	}
 	if largeCount > 0 {
 		recommendations = append(recommendations, fmt.Sprintf("Found %d large conversations (>1MB), consider cleaning", largeCount))
 	}
 	if tempCount > 0 {
-		recommendations = append(recommendations, fmt.Sprintf("Found %d temp/old log files, recommend cleaning", tempCount))
+		recommendations = append(recommendations, fmt.Sprintf("Found %d temp files, run: kiro-cleaner clean --temp", tempCount))
 	}
 	if len(recommendations) == 0 {
-		recommendations = append(recommendations, "No data needs cleaning")
+		recommendations = append(recommendations, "Storage is clean, no action needed")
 	}
 	
 	fmt.Println(renderer.RenderRecommendations(recommendations))
-}
-
-// displayScanPretty 美化显示扫描结果
-func displayScanPretty(stats *types.StorageStats, convStats *types.ConversationStats, files []types.FileInfo) {
-	// 头部
-	fmt.Println(renderer.RenderHeader("Kiro Storage Scan Results"))
-	fmt.Println()
-	
-	// 表格数据
-	headers := []string{"Type", "Size", "Count"}
-	rows := [][]string{
-		{"Total", storage.FormatSize(stats.TotalSize + convStats.TotalSize), fmt.Sprintf("%d", len(files)+convStats.TotalConversations)},
-		{"Conversations", storage.FormatSize(convStats.TotalSize), fmt.Sprintf("%d", convStats.TotalConversations)},
-		{"Cache", storage.FormatSize(stats.CacheSize), fmt.Sprintf("%d", stats.FileCounts["缓存"])},
-		{"Logs", storage.FormatSize(stats.LogSize), fmt.Sprintf("%d", stats.FileCounts["日志"])},
-		{"Temp Files", storage.FormatSize(stats.TempSize), fmt.Sprintf("%d", stats.FileCounts["临时"])},
-	}
-	
-	fmt.Println(renderer.RenderTable(headers, rows))
-	
-	// 对话统计
-	fmt.Printf("\n  Total Messages: %d\n", convStats.TotalMessages)
-	fmt.Printf("  Workspaces: %d\n", len(convStats.WorkspaceBreakdown))
-}
-
-// displayAnalyzePretty 美化显示分析结果
-func displayAnalyzePretty(analysis *types.AnalysisResult, convStats *types.ConversationStats, cleanable []types.CleanableConversation) {
-	// 头部
-	fmt.Println(renderer.RenderHeader("Kiro Redundancy Analysis Report"))
-	fmt.Println()
-	
-	stats := analysis.StorageStats
-	
-	// 存储概览
-	fmt.Println("[Storage Overview]")
-	fmt.Println(strings.Repeat("-", 50))
-	fmt.Printf("  File System Storage: %s\n", storage.FormatSize(stats.TotalSize))
-	fmt.Printf("  Conversation Storage: %s\n", storage.FormatSize(convStats.TotalSize))
-	fmt.Printf("  Total Storage Used:   %s\n", storage.FormatSize(stats.TotalSize+convStats.TotalSize))
-	fmt.Println()
-	
-	// 可清理对话统计
-	var oldSize, largeSize int64
-	oldCount, largeCount := 0, 0
-	for _, c := range cleanable {
-		if c.Reason == "old" {
-			oldCount++
-			oldSize += c.Size
-		} else {
-			largeCount++
-			largeSize += c.Size
-		}
-	}
-	
-	fmt.Println(renderer.RenderCleanableItems(oldCount, largeCount, 0, oldSize, largeSize, 0))
-	
-	// 总节省空间
-	totalSavings := analysis.SpaceSavings + oldSize + largeSize
-	fmt.Println(renderer.RenderTotalSavings(totalSavings))
-	fmt.Println()
-	
-	// 建议
-	var recommendations []string
-	recommendations = append(recommendations, analysis.Recommendations...)
-	if oldCount > 0 {
-		recommendations = append(recommendations, fmt.Sprintf("Found %d old conversations (>30 days), consider cleaning", oldCount))
-	}
-	if largeCount > 0 {
-		recommendations = append(recommendations, fmt.Sprintf("Found %d large conversations (>1MB), consider cleaning", largeCount))
-	}
-	
-	if len(recommendations) > 0 {
-		fmt.Println(renderer.RenderRecommendations(recommendations))
-	}
-}
-
-// 保留旧的显示函数用于兼容（可以删除）
-func displayStatus(stats *types.StorageStats, dbAnalysis *DBAnalysis, files []types.FileInfo) {
-	displayStatusPretty(stats, &types.ConversationStats{}, []types.CleanableConversation{}, files)
-}
-
-func displayScanResults(stats *types.StorageStats, files []types.FileInfo) {
-	displayScanPretty(stats, &types.ConversationStats{}, files)
-}
-
-func displayAnalysis(analysis *types.AnalysisResult) {
-	displayAnalyzePretty(analysis, &types.ConversationStats{}, []types.CleanableConversation{})
 }
 
 // DBAnalysis 数据库分析结果（保留用于兼容）
@@ -575,19 +476,6 @@ type DBAnalysis struct {
 // displayRecentConversations 显示最近对话
 func displayRecentConversations() {
 	fmt.Println(renderer.RenderInfo("使用 --detailed --conversations 查看详细信息"))
-}
-
-// 删除不再需要的旧函数
-func displayStatusNew(stats *types.StorageStats, convStats *types.ConversationStats, cleanable []types.CleanableConversation, files []types.FileInfo) {
-	displayStatusPretty(stats, convStats, cleanable, files)
-}
-
-func displayScanResultsNew(stats *types.StorageStats, convStats *types.ConversationStats, files []types.FileInfo) {
-	displayScanPretty(stats, convStats, files)
-}
-
-func displayAnalysisNew(analysis *types.AnalysisResult, convStats *types.ConversationStats, cleanable []types.CleanableConversation) {
-	displayAnalyzePretty(analysis, convStats, cleanable)
 }
 
 // 辅助函数：重复字符串
