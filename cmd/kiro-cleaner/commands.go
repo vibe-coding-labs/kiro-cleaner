@@ -168,13 +168,28 @@ type cleanItem struct {
 
 // displayScanResult 显示扫描结果
 func displayScanResult(stats *types.StorageStats, convStats *types.ConversationStats, files []types.FileInfo) {
+	// 按类型统计文件大小
+	typeSizes := make(map[types.FileType]int64)
+	for _, file := range files {
+		typeSizes[file.FileType] += file.Size
+	}
+	
+	// 计算 Other（未分类的文件）
+	otherSize := stats.TotalSize - stats.CacheSize - stats.LogSize - stats.TempSize - stats.DBSize
+	if otherSize < 0 {
+		otherSize = 0
+	}
+	
 	// 存储统计
 	fmt.Println("[Storage]")
 	fmt.Printf("  Total:         %s\n", storage.FormatSize(stats.TotalSize+convStats.TotalSize))
 	fmt.Printf("  Conversations: %s (%d)\n", storage.FormatSize(convStats.TotalSize), convStats.TotalConversations)
-	fmt.Printf("  Cache:         %s\n", storage.FormatSize(stats.CacheSize))
 	fmt.Printf("  Logs:          %s\n", storage.FormatSize(stats.LogSize))
+	fmt.Printf("  Cache:         %s\n", storage.FormatSize(stats.CacheSize))
 	fmt.Printf("  Temp:          %s\n", storage.FormatSize(stats.TempSize))
+	if otherSize > 0 {
+		fmt.Printf("  Other:         %s\n", storage.FormatSize(otherSize))
+	}
 	fmt.Println()
 	
 	// 可清理项
