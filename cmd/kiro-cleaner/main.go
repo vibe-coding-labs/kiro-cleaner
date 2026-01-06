@@ -34,11 +34,9 @@ var (
 )
 
 func getLongDescription() string {
-	// Colors
 	cyan := color.New(color.FgHiCyan, color.Bold).SprintFunc()
 	green := color.New(color.FgHiGreen, color.Bold).SprintFunc()
 	yellow := color.New(color.FgHiYellow, color.Bold).SprintFunc()
-	blue := color.New(color.FgHiBlue, color.Bold).SprintFunc()
 	red := color.New(color.FgHiRed, color.Bold).SprintFunc()
 	white := color.New(color.FgHiWhite).SprintFunc()
 	dim := color.New(color.FgWhite).SprintFunc()
@@ -49,34 +47,25 @@ func getLongDescription() string {
 %s
 
 %s
-  %s     %s
-  %s    %s
+  %s   %s
+  %s  %s
 
 %s
   %s kiro-cleaner scan
-  %s kiro-cleaner scan --detailed
   %s kiro-cleaner clean --dry-run
-  %s kiro-cleaner clean --temp --logs --force
-
-%s %s
-%s %s`,
+  %s kiro-cleaner clean`,
 		cyan("🧹 Kiro Cleaner"),
 		dim("v"+version),
-		white("Safely clean Kiro IDE storage: conversations, cache, logs, and temp files."),
-		yellow("⚡ Quick Start:"),
+		white("Clean Kiro IDE storage: temp files, old logs, cache."),
+		yellow("Commands:"),
 		green("scan"),
-		white("Scan storage usage (use --detailed for full analysis)"),
+		white("Show storage usage and what can be cleaned"),
 		red("clean"),
-		white("Clean up redundant files"),
-		yellow("📋 Examples:"),
+		white("Delete temp files and old logs"),
+		yellow("Examples:"),
 		dim("$"),
 		dim("$"),
 		dim("$"),
-		dim("$"),
-		cyan("🔗 GitHub:"),
-		blue("https://github.com/vibe-coding-labs/kiro-cleaner"),
-		cyan("📦 Install:"),
-		dim("go install github.com/vibe-coding-labs/kiro-cleaner@latest"),
 	)
 }
 
