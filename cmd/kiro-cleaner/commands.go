@@ -33,9 +33,9 @@ func init() {
 	rootCmd.AddCommand(scanCmd)
 	rootCmd.AddCommand(cleanCmd)
 	
-	// Clean command flags - 只保留最基本的
+	// Clean command flags
 	cleanCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview only, no deletion")
-	cleanCmd.Flags().BoolVar(&force, "force", false, "Skip confirmation")
+	cleanCmd.Flags().BoolVarP(&force, "force", "f", false, "Skip confirmation")
 }
 
 var (
