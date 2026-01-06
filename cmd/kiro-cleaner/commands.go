@@ -73,9 +73,15 @@ func init() {
 	rootCmd.AddCommand(installCmd)
 	rootCmd.AddCommand(uninstallCmd)
 	
+	// 为所有子命令设置自定义帮助函数
+	for _, cmd := range rootCmd.Commands() {
+		cmd.SetHelpFunc(customSubCmdHelpFunc)
+	}
+	
 	// Clean command flags (override global config)
 	cleanCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview only, no deletion")
 	cleanCmd.Flags().BoolVarP(&force, "force", "f", false, "Skip confirmation")
+	cleanCmd.Flags().BoolVar(&killKiro, "kill-kiro", false, "Automatically stop Kiro before cleaning")
 	cleanCmd.Flags().BoolVar(&keepLogs, "keep-logs", false, "Keep log files")
 	cleanCmd.Flags().BoolVar(&keepCache, "keep-cache", false, "Keep cache files")
 	cleanCmd.Flags().BoolVar(&keepChats, "keep-chats", false, "Keep chat conversations")
@@ -89,6 +95,7 @@ func init() {
 var (
 	dryRun      bool
 	force       bool
+	killKiro    bool
 	keepLogs    bool
 	keepCache   bool
 	keepChats   bool
@@ -159,6 +166,28 @@ func runClean(cmd *cobra.Command, args []string) error {
 	// 检测 Kiro 是否运行
 	running, _, _ := utils.IsKiroRunning()
 	
+	// 如果 Kiro 正在运行且设置了 --kill-kiro，先停止 Kiro
+	if running && killKiro && !dryRun {
+		spinner.UpdateText("Stopping Kiro...")
+		if err := utils.StopKiro(true); err != nil {
+			spinner.Fail("Failed to stop Kiro")
+			termUI.PrintWarning(fmt.Sprintf("Could not stop Kiro: %v", err))
+			termUI.PrintInfo("Try closing Kiro manually or use --force to continue anyway")
+			if !force {
+				return nil
+			}
+		} else {
+			// 等待 Kiro 完全退出
+			if utils.WaitForKiroExit(5 * time.Second) {
+				running = false
+				spinner.UpdateText("Scanning for cleanable files...")
+			} else {
+				spinner.Fail("Kiro did not exit in time")
+				termUI.PrintWarning("Kiro is still running, some files may be locked")
+			}
+		}
+	}
+	
 	// 扫描文件
 	fileScanner := scanner.NewFileScanner()
 	files, _ := fileScanner.Scan()
@@ -228,6 +257,7 @@ func runClean(cmd *cobra.Command, args []string) error {
 	// Kiro 运行警告
 	if running && !dryRun {
 		termUI.PrintWarning("Kiro is running, some files may be locked")
+		termUI.PrintInfo("Use --kill-kiro to automatically stop Kiro before cleaning")
 		if !force {
 			if !termUI.Confirm("Continue anyway?") {
 				pterm.Info.Println("Cancelled")

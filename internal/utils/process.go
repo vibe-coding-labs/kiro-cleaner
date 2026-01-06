@@ -20,11 +20,42 @@ func IsKiroRunning() (bool, []KiroProcess, error) {
 	var processes []KiroProcess
 
 	switch runtime.GOOS {
-	case "darwin", "linux":
-		// 使用 pgrep 查找 Kiro 进程
-		out, err := exec.Command("pgrep", "-l", "-i", "kiro").Output()
+	case "darwin":
+		// macOS: 使用 pgrep 查找 Kiro 主进程和 Helper 进程
+		// Kiro 应用的进程名通常是 "Kiro" 或 "Kiro Helper"
+		out, err := exec.Command("pgrep", "-l", "Kiro").Output()
 		if err != nil {
 			// pgrep 没找到进程时返回 exit code 1，这不是错误
+			if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {
+				return false, nil, nil
+			}
+			return false, nil, err
+		}
+
+		lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+		for _, line := range lines {
+			if line == "" {
+				continue
+			}
+			parts := strings.SplitN(line, " ", 2)
+			if len(parts) < 2 {
+				continue
+			}
+			
+			pid, _ := strconv.Atoi(parts[0])
+			name := parts[1]
+			
+			// 只匹配真正的 Kiro 应用进程，排除 kiro-cleaner 等工具
+			// Kiro 应用进程名: "Kiro", "Kiro Helper", "Kiro Helper (GPU)", etc.
+			if isKiroAppProcess(name) {
+				processes = append(processes, KiroProcess{PID: pid, Name: name})
+			}
+		}
+
+	case "linux":
+		// Linux: 使用 pgrep 查找 Kiro 进程
+		out, err := exec.Command("pgrep", "-l", "-i", "^kiro$").Output()
+		if err != nil {
 			if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {
 				return false, nil, nil
 			}
@@ -43,7 +74,9 @@ func IsKiroRunning() (bool, []KiroProcess, error) {
 				if len(parts) >= 2 {
 					name = parts[1]
 				}
-				processes = append(processes, KiroProcess{PID: pid, Name: name})
+				if isKiroAppProcess(name) {
+					processes = append(processes, KiroProcess{PID: pid, Name: name})
+				}
 			}
 		}
 
@@ -56,7 +89,7 @@ func IsKiroRunning() (bool, []KiroProcess, error) {
 
 		lines := strings.Split(strings.TrimSpace(string(out)), "\n")
 		for _, line := range lines {
-			if strings.Contains(line, "Kiro") {
+			if strings.Contains(line, "Kiro.exe") {
 				// CSV 格式: "Kiro.exe","1234",...
 				parts := strings.Split(line, ",")
 				if len(parts) >= 2 {
@@ -69,6 +102,32 @@ func IsKiroRunning() (bool, []KiroProcess, error) {
 	}
 
 	return len(processes) > 0, processes, nil
+}
+
+// isKiroAppProcess 判断是否是 Kiro 应用进程（排除 kiro-cleaner 等工具）
+func isKiroAppProcess(name string) bool {
+	// 排除 kiro-cleaner 和其他工具
+	lowerName := strings.ToLower(name)
+	if strings.Contains(lowerName, "kiro-cleaner") ||
+		strings.Contains(lowerName, "kiro_cleaner") ||
+		strings.Contains(lowerName, "kiro-cli") ||
+		strings.Contains(lowerName, "kiro_cli") {
+		return false
+	}
+	
+	// 匹配 Kiro 应用进程
+	// macOS: "Kiro", "Kiro Helper", "Kiro Helper (GPU)", "Kiro Helper (Renderer)", etc.
+	// Linux/Windows: "Kiro", "kiro"
+	if strings.HasPrefix(name, "Kiro") || strings.HasPrefix(name, "kiro") {
+		// 确保是 Kiro 应用，不是其他以 kiro 开头的程序
+		if name == "Kiro" || name == "kiro" || 
+			strings.HasPrefix(name, "Kiro Helper") ||
+			strings.HasPrefix(name, "Kiro.exe") {
+			return true
+		}
+	}
+	
+	return false
 }
 
 // StopKiro 停止 Kiro 进程
