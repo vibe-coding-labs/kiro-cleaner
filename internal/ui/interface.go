@@ -129,3 +129,36 @@ func RunApp(ctx context.Context) {
     cli := NewCLI()
     cli.DisplayMessage("Kiro Cleaner 启动中...")
 }
+
+// SimplePrompter 简单提示器
+type SimplePrompter struct {
+    output io.Writer
+}
+
+// NewSimplePrompter 创建简单提示器
+func NewSimplePrompter(output io.Writer) *SimplePrompter {
+    if output == nil {
+        output = io.Discard
+    }
+    return &SimplePrompter{output: output}
+}
+
+// Info 显示信息
+func (sp *SimplePrompter) Info(message string) {
+    fmt.Fprintf(sp.output, "ℹ️  %s\n", message)
+}
+
+// Warning 显示警告
+func (sp *SimplePrompter) Warning(message string) {
+    fmt.Fprintf(sp.output, "⚠️  %s\n", message)
+}
+
+// Success 显示成功
+func (sp *SimplePrompter) Success(message string) {
+    fmt.Fprintf(sp.output, "✅ %s\n", message)
+}
+
+// Error 显示错误
+func (sp *SimplePrompter) Error(message string) {
+    fmt.Fprintf(sp.output, "❌ %s\n", message)
+}

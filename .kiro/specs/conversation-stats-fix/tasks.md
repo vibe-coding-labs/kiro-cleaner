@@ -10,7 +10,7 @@
   - 在 `pkg/types/types.go` 中添加 ChatFileInfo、ChatMetadata、WorkspaceStats、ConversationStats 等类型
   - _Requirements: 3.5, 4.1-4.5_
 
-- [ ] 2. 实现 ChatParser 解析器
+- [x] 2. 实现 ChatParser 解析器
   - [x] 2.1 创建 `internal/scanner/chat_parser.go` 文件
     - 实现 ParseChatFile 方法解析单个 .chat 文件
     - 实现消息计数逻辑（human/bot/tool）
@@ -20,7 +20,7 @@
     - **Property 2: Message Count Accuracy**
     - **Validates: Requirements 3.2, 3.3**
 
-- [ ] 3. 实现 ChatScanner 扫描器
+- [x] 3. 实现 ChatScanner 扫描器
   - [x] 3.1 创建 `internal/scanner/chat_scanner.go` 文件
     - 实现 FindKiroAgentPath 方法（支持 macOS/Windows/Linux）
     - 实现 ScanWorkspaces 方法递归扫描工作区
@@ -29,7 +29,7 @@
     - **Property 1: Chat File Identification**
     - **Validates: Requirements 2.2**
 
-- [ ] 4. 实现统计聚合功能
+- [x] 4. 实现统计聚合功能
   - [x] 4.1 实现 GetConversationStats 方法
     - 聚合所有工作区的统计数据
     - 计算总对话数、总消息数、总大小
@@ -45,7 +45,7 @@
   - 运行所有测试，确保核心功能正确
   - 如有问题请询问用户
 
-- [ ] 6. 实现可清理对话识别
+- [x] 6. 实现可清理对话识别
   - [x] 6.1 实现 FindCleanableConversations 方法
     - 识别超过指定天数的旧对话
     - 识别超过指定大小的大对话
@@ -56,7 +56,7 @@
     - **Property 7: Space Savings Calculation**
     - **Validates: Requirements 5.1, 5.2, 5.3**
 
-- [ ] 7. 集成到现有命令
+- [x] 7. 集成到现有命令
   - [x] 7.1 修改 `cmd/kiro-cleaner/commands.go`
     - 更新 runStatus 函数使用 ChatScanner
     - 更新 displayStatus 函数显示新的统计格式
@@ -66,7 +66,7 @@
     - 集成新的扫描逻辑
     - _Requirements: 2.1, 2.2_
 
-- [-] 8. Final Checkpoint - 确保所有测试通过
+- [x] 8. Final Checkpoint - 确保所有测试通过
   - 运行完整测试套件
   - 手动验证 `kiro-cleaner status` 命令输出正确的统计信息
   - 如有问题请询问用户

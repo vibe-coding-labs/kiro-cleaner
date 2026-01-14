@@ -160,3 +160,61 @@ func (pd *ProgressDisplay) GetCallback() types.ProgressCallback {
 		pd.Update(progress)
 	}
 }
+
+// CleanupPreview 清理预览信息
+type CleanupPreview struct {
+	Actions         []types.CleanupAction
+	TotalSize       int64
+	SafeToDelete    bool
+	Warnings        []string
+	Recommendations []string
+}
+
+// ShowCleanupPreview 显示清理预览
+func (pd *ProgressDisplay) ShowCleanupPreview(preview *CleanupPreview) {
+	fmt.Println("\n📋 清理预览")
+	fmt.Println(strings.Repeat("-", 50))
+	
+	if len(preview.Actions) == 0 {
+		fmt.Println("没有需要清理的文件")
+		return
+	}
+	
+	fmt.Printf("待清理文件: %d 个\n", len(preview.Actions))
+	fmt.Printf("预计释放空间: %s\n", storage.FormatSize(preview.TotalSize))
+	
+	if !preview.SafeToDelete {
+		fmt.Println("\n⚠️  警告:")
+		for _, w := range preview.Warnings {
+			fmt.Printf("  - %s\n", w)
+		}
+	}
+	
+	if len(preview.Recommendations) > 0 {
+		fmt.Println("\n💡 建议:")
+		for _, r := range preview.Recommendations {
+			fmt.Printf("  - %s\n", r)
+		}
+	}
+	fmt.Println()
+}
+
+// SetTotal 设置总数
+func (pd *ProgressDisplay) SetTotal(total int64) {
+	// 用于清理进度显示
+}
+
+// SetPrefix 设置前缀
+func (pd *ProgressDisplay) SetPrefix(prefix string) {
+	// 用于清理进度显示
+}
+
+// SetCurrent 设置当前进度
+func (pd *ProgressDisplay) SetCurrent(current int64) {
+	// 用于清理进度显示
+}
+
+// Finish 完成进度
+func (pd *ProgressDisplay) Finish() {
+	pd.Stop()
+}

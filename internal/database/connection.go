@@ -375,6 +375,16 @@ func (dm *DatabaseManager) CreateTables() error {
 	return nil
 }
 
+// GetAllConversations 获取所有对话
+func (dm *DatabaseManager) GetAllConversations() ([]types.Conversation, error) {
+	if !dm.IsConnected() {
+		return nil, fmt.Errorf("数据库未连接")
+	}
+	
+	dao := &ConversationDAO{db: dm.db}
+	return dao.GetAll()
+}
+
 // DBInfo 数据库信息结构
 type DBInfo struct {
 	FileSize          int64     `json:"file_size"`

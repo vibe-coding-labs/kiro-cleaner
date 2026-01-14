@@ -1,14 +1,16 @@
-package utils
+package utils_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
+
+	"github.com/vibe-coding-labs/kiro-cleaner/internal/utils"
 )
 
 func TestFileOps_EnsureDir(t *testing.T) {
-	fo := NewFileOps()
+	fo := utils.NewFileOps()
 	testDir := filepath.Join(os.TempDir(), "kiro-cleaner-test")
 	
 	// 清理测试目录
@@ -27,7 +29,7 @@ func TestFileOps_EnsureDir(t *testing.T) {
 }
 
 func TestFileOps_IsEmptyDir(t *testing.T) {
-	fo := NewFileOps()
+	fo := utils.NewFileOps()
 	testDir := filepath.Join(os.TempDir(), "kiro-cleaner-empty-test")
 	
 	// 清理测试目录
@@ -60,7 +62,7 @@ func TestFileOps_IsEmptyDir(t *testing.T) {
 }
 
 func TestFileOps_GetFileAge(t *testing.T) {
-	fo := NewFileOps()
+	fo := utils.NewFileOps()
 	testFile := filepath.Join(os.TempDir(), "kiro-cleaner-age-test.txt")
 	
 	// 清理测试文件
@@ -82,7 +84,7 @@ func TestFileOps_GetFileAge(t *testing.T) {
 }
 
 func TestFileOps_IsFileOlderThan(t *testing.T) {
-	fo := NewFileOps()
+	fo := utils.NewFileOps()
 	testFile := filepath.Join(os.TempDir(), "kiro-cleaner-older-test.txt")
 	
 	// 清理测试文件
@@ -111,7 +113,7 @@ func TestFileOps_IsFileOlderThan(t *testing.T) {
 }
 
 func TestTimeUtil_FormatDuration(t *testing.T) {
-	tu := NewTimeUtil()
+	tu := utils.NewTimeUtil()
 	
 	tests := []struct {
 		duration time.Duration
@@ -133,7 +135,7 @@ func TestTimeUtil_FormatDuration(t *testing.T) {
 }
 
 func TestTimeUtil_ParseDuration(t *testing.T) {
-	tu := NewTimeUtil()
+	tu := utils.NewTimeUtil()
 	
 	tests := []struct {
 		input    string
@@ -167,7 +169,7 @@ func TestTimeUtil_ParseDuration(t *testing.T) {
 }
 
 func TestErrorUtil_IsPermissionError(t *testing.T) {
-	eu := NewErrorUtil()
+	eu := utils.NewErrorUtil()
 	
 	// 测试正常错误
 	normalErr := os.ErrPermission
@@ -188,7 +190,7 @@ func TestErrorUtil_IsPermissionError(t *testing.T) {
 }
 
 func TestPathUtil_JoinPath(t *testing.T) {
-	pu := NewPathUtil()
+	pu := utils.NewPathUtil()
 	
 	result := pu.JoinPath("dir1", "dir2", "file.txt")
 	expected := filepath.Join("dir1", "dir2", "file.txt")
@@ -199,7 +201,7 @@ func TestPathUtil_JoinPath(t *testing.T) {
 }
 
 func TestPathUtil_IsAbsolutePath(t *testing.T) {
-	pu := NewPathUtil()
+	pu := utils.NewPathUtil()
 	
 	if !pu.IsAbsolutePath("/absolute/path") {
 		t.Error("绝对路径检测失败")
@@ -211,7 +213,7 @@ func TestPathUtil_IsAbsolutePath(t *testing.T) {
 }
 
 func TestPathUtil_BaseName(t *testing.T) {
-	pu := NewPathUtil()
+	pu := utils.NewPathUtil()
 	
 	result := pu.BaseName("/path/to/file.txt")
 	expected := "file.txt"
@@ -222,7 +224,7 @@ func TestPathUtil_BaseName(t *testing.T) {
 }
 
 func TestPathUtil_Ext(t *testing.T) {
-	pu := NewPathUtil()
+	pu := utils.NewPathUtil()
 	
 	result := pu.Ext("/path/to/file.txt")
 	expected := ".txt"

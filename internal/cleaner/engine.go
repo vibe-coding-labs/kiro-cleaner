@@ -38,7 +38,7 @@ func NewCleanupEngine(scanner scanner.Scanner, dbManager *database.DatabaseManag
 		dbManager:  dbManager,
 		backupMgr:  backupMgr,
 		prompter:   prompter,
-		progress:   ui.NewProgressDisplay(os.Stdout, true),
+		progress:   ui.NewProgressDisplay(),
 		safety:     &SafetyChecker{config: &types.SafetyConfig{}},
 	}
 }
