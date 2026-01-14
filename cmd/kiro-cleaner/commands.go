@@ -172,8 +172,8 @@ func runClean(cmd *cobra.Command, args []string) error {
 	// 加载全局配置
 	cfg := config.LoadConfig()
 	
-	// -y 和 -f 效果相同，合并处理
-	skipConfirm := force || yes
+	// -y 和 -f 效果相同，合并处理；配置文件中的 skip_confirm 也生效
+	skipConfirm := force || yes || cfg.SkipConfirm
 	
 	// 命令行参数覆盖全局配置
 	if !cmd.Flags().Changed("keep-logs") {
@@ -501,6 +501,7 @@ func runConfig(cmd *cobra.Command, args []string) error {
 		{"keep_chats", fmt.Sprintf("%v", cfg.KeepChats), "Keep conversations"},
 		{"keep_index", fmt.Sprintf("%v", cfg.KeepIndex), "Keep code index"},
 		{"keep_recent", fmt.Sprintf("%d days", cfg.KeepRecent), "Keep recent files"},
+		{"skip_confirm", fmt.Sprintf("%v", cfg.SkipConfirm), "Skip confirmation prompts"},
 	}
 	
 	termUI.PrintConfigTable(config.ConfigPath(), settings)
@@ -509,7 +510,7 @@ func runConfig(cmd *cobra.Command, args []string) error {
 	termUI.PrintTips([]string{
 		"Edit the config file to change defaults",
 		"Command line flags override config",
-		"Set keep_* to true to preserve by default",
+		"Set skip_confirm to true to never ask for confirmation",
 	})
 	
 	// 确保配置文件存在

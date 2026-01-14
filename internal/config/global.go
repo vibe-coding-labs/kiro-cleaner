@@ -14,16 +14,20 @@ type GlobalConfig struct {
 	KeepChats  bool `json:"keep_chats"`  // 保留对话
 	KeepIndex  bool `json:"keep_index"`  // 保留索引
 	KeepRecent int  `json:"keep_recent"` // 保留最近N天的文件（0=不保留）
+	
+	// 行为选项
+	SkipConfirm bool `json:"skip_confirm"` // 跳过确认提示（等同于 -y/-f）
 }
 
 // DefaultConfig 默认配置（全部清理）
 func DefaultConfig() *GlobalConfig {
 	return &GlobalConfig{
-		KeepLogs:   false,
-		KeepCache:  false,
-		KeepChats:  false,
-		KeepIndex:  false,
-		KeepRecent: 0,
+		KeepLogs:    false,
+		KeepCache:   false,
+		KeepChats:   false,
+		KeepIndex:   false,
+		KeepRecent:  0,
+		SkipConfirm: false,
 	}
 }
 
