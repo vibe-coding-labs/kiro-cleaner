@@ -86,8 +86,13 @@ func (cs *ChatScanner) SetBasePath(path string) {
 	cs.basePath = path
 }
 
-// ScanWorkspaces 扫描所有工作区
+// ScanWorkspaces 扫描所有工作区（向后兼容）
 func (cs *ChatScanner) ScanWorkspaces() ([]types.WorkspaceStats, error) {
+	return cs.ScanWorkspacesWithProgress(nil)
+}
+
+// ScanWorkspacesWithProgress 带进度回调的工作区扫描
+func (cs *ChatScanner) ScanWorkspacesWithProgress(callback types.ProgressCallback) ([]types.WorkspaceStats, error) {
 	if cs.basePath == "" {
 		if _, err := cs.FindKiroAgentPath(); err != nil {
 			return nil, err
@@ -102,6 +107,13 @@ func (cs *ChatScanner) ScanWorkspaces() ([]types.WorkspaceStats, error) {
 		return nil, fmt.Errorf("读取目录失败: %v", err)
 	}
 
+	// 初始化进度（如果有回调）
+	var progress *types.ScanProgress
+	if callback != nil {
+		progress = types.NewScanProgress()
+		progress.Phase = "chats"
+	}
+
 	for _, entry := range entries {
 		// 跳过非目录和隐藏目录
 		if !entry.IsDir() || strings.HasPrefix(entry.Name(), ".") {
@@ -114,7 +126,15 @@ func (cs *ChatScanner) ScanWorkspaces() ([]types.WorkspaceStats, error) {
 		}
 
 		workspacePath := filepath.Join(cs.basePath, entry.Name())
-		stats, err := cs.scanSingleWorkspace(entry.Name(), workspacePath)
+		
+		// 更新进度
+		if progress != nil {
+			progress.ScannedDirs++
+			progress.CurrentPath = workspacePath
+			callback(*progress)
+		}
+		
+		stats, err := cs.scanSingleWorkspaceWithProgress(entry.Name(), workspacePath, progress, callback)
 		if err != nil {
 			// 跳过无法扫描的工作区，继续处理其他
 			continue
@@ -125,11 +145,22 @@ func (cs *ChatScanner) ScanWorkspaces() ([]types.WorkspaceStats, error) {
 		}
 	}
 
+	// 标记完成
+	if progress != nil {
+		progress.IsComplete = true
+		callback(*progress)
+	}
+
 	return workspaces, nil
 }
 
-// scanSingleWorkspace 扫描单个工作区
+// scanSingleWorkspace 扫描单个工作区（向后兼容）
 func (cs *ChatScanner) scanSingleWorkspace(workspaceID, path string) (*types.WorkspaceStats, error) {
+	return cs.scanSingleWorkspaceWithProgress(workspaceID, path, nil, nil)
+}
+
+// scanSingleWorkspaceWithProgress 带进度回调的单个工作区扫描
+func (cs *ChatScanner) scanSingleWorkspaceWithProgress(workspaceID, path string, progress *types.ScanProgress, callback types.ProgressCallback) (*types.WorkspaceStats, error) {
 	stats := &types.WorkspaceStats{
 		WorkspaceID: workspaceID,
 		Path:        path,
@@ -159,6 +190,19 @@ func (cs *ChatScanner) scanSingleWorkspace(workspaceID, path string) (*types.Wor
 
 		if chatInfo.ModTime.After(stats.LastActivity) {
 			stats.LastActivity = chatInfo.ModTime
+		}
+
+		// 更新进度
+		if progress != nil {
+			progress.ScannedFiles++
+			progress.TotalSize += chatInfo.Size
+			progress.CurrentPath = chatPath
+			progress.TypeCounts["chat"]++
+			progress.TypeSizes["chat"] += chatInfo.Size
+			
+			if callback != nil {
+				callback(*progress)
+			}
 		}
 	}
 

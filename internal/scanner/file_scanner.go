@@ -33,9 +33,18 @@ func NewFileScanner() *FileScanner {
 	}
 }
 
-// Scan 扫描文件
+// Scan 扫描文件（向后兼容）
 func (fs *FileScanner) Scan() ([]types.FileInfo, error) {
+	return fs.ScanWithProgress(nil)
+}
+
+// ScanWithProgress 带进度回调的扫描
+func (fs *FileScanner) ScanWithProgress(callback types.ProgressCallback) ([]types.FileInfo, error) {
 	var allFiles []types.FileInfo
+	
+	// 初始化进度
+	progress := types.NewScanProgress()
+	progress.Phase = "files"
 	
 	// 查找Kiro路径
 	paths, err := fs.detector.FindKiroPaths()
@@ -47,19 +56,30 @@ func (fs *FileScanner) Scan() ([]types.FileInfo, error) {
 	
 	// 扫描每个路径
 	for _, path := range paths {
-		files, err := fs.scanPath(path)
+		files, err := fs.scanPathWithProgress(path, progress, callback)
 		if err != nil {
-			fmt.Printf("警告: 扫描路径 %s 失败: %v\n", path, err)
+			// 静默跳过无法扫描的路径
 			continue
 		}
 		allFiles = append(allFiles, files...)
 	}
 	
+	// 标记完成
+	if callback != nil {
+		progress.IsComplete = true
+		callback(*progress)
+	}
+	
 	return allFiles, nil
 }
 
-// scanPath 扫描单个路径
+// scanPath 扫描单个路径（向后兼容）
 func (fs *FileScanner) scanPath(path string) ([]types.FileInfo, error) {
+	return fs.scanPathWithProgress(path, nil, nil)
+}
+
+// scanPathWithProgress 带进度回调的路径扫描
+func (fs *FileScanner) scanPathWithProgress(path string, progress *types.ScanProgress, callback types.ProgressCallback) ([]types.FileInfo, error) {
 	var files []types.FileInfo
 	
 	// 获取文件类型映射
@@ -74,12 +94,20 @@ func (fs *FileScanner) scanPath(path string) ([]types.FileInfo, error) {
 			return nil // 跳过无法访问的文件
 		}
 		
+		// 更新进度 - 目录
 		if info.IsDir() {
+			if progress != nil {
+				progress.ScannedDirs++
+				progress.CurrentPath = filePath
+				if callback != nil {
+					callback(*progress)
+				}
+			}
 			return nil
 		}
 		
 		// 获取文件信息
-			fileType := fileTypes[filePath]
+		fileType := fileTypes[filePath]
 		
 		fileInfo := types.FileInfo{
 			Path:        filePath,
@@ -88,14 +116,53 @@ func (fs *FileScanner) scanPath(path string) ([]types.FileInfo, error) {
 			Modified:    info.ModTime(),
 			FileType:    fileType,
 			IsEmpty:     info.Size() == 0,
-			IsCorrupted: false, // 暂时设为false，后续可以添加检测逻辑
+			IsCorrupted: false,
 		}
 		
 		files = append(files, fileInfo)
+		
+		// 更新进度 - 文件
+		if progress != nil {
+			progress.ScannedFiles++
+			progress.TotalSize += info.Size()
+			progress.CurrentPath = filePath
+			
+			// 更新类型统计
+			typeName := fileTypeToString(fileType)
+			progress.TypeCounts[typeName]++
+			progress.TypeSizes[typeName] += info.Size()
+			
+			if callback != nil {
+				callback(*progress)
+			}
+		}
+		
 		return nil
 	})
 	
 	return files, err
+}
+
+// fileTypeToString 将文件类型转换为字符串
+func fileTypeToString(ft types.FileType) string {
+	switch ft {
+	case types.TypeLog:
+		return "log"
+	case types.TypeCache:
+		return "cache"
+	case types.TypeTemp:
+		return "temp"
+	case types.TypeIndex:
+		return "index"
+	case types.TypeBackup:
+		return "history"
+	case types.TypeDatabase:
+		return "database"
+	case types.TypeConfig:
+		return "config"
+	default:
+		return "other"
+	}
 }
 
 // GetStorageStats 获取存储统计信息

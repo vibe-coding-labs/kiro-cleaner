@@ -2,173 +2,161 @@ package ui
 
 import (
 	"fmt"
-	"io"
+	"os"
 	"strings"
+	"sync"
+	"time"
 
-	"github.com/charmbracelet/lipgloss"
+	"github.com/pterm/pterm"
+	"github.com/vibe-coding-labs/kiro-cleaner/internal/storage"
 	"github.com/vibe-coding-labs/kiro-cleaner/pkg/types"
+	"golang.org/x/term"
 )
 
-// ProgressDisplay 进度显示器
+// ProgressDisplay 进度展示组件
 type ProgressDisplay struct {
-	output  io.Writer
-	total   int64
-	current int64
-	prefix  string
-	enabled bool
+	area        *pterm.AreaPrinter
+	lastUpdate  time.Time
+	minInterval time.Duration
+	mu          sync.Mutex
+	started     bool
+	isTerminal  bool
 }
 
-// NewProgressDisplay 创建新的进度显示器
-func NewProgressDisplay(output io.Writer, enabled bool) *ProgressDisplay {
+// NewProgressDisplay 创建进度展示
+func NewProgressDisplay() *ProgressDisplay {
+	// 检测是否为交互式终端
+	isTerminal := term.IsTerminal(int(os.Stdout.Fd()))
+	
 	return &ProgressDisplay{
-		output:  output,
-		enabled: enabled,
+		minInterval: 100 * time.Millisecond, // 最小更新间隔 100ms
+		isTerminal:  isTerminal,
 	}
 }
 
-// SetTotal 设置总数
-func (p *ProgressDisplay) SetTotal(total int64) {
-	p.total = total
-}
-
-// SetCurrent 设置当前进度
-func (p *ProgressDisplay) SetCurrent(current int64) {
-	p.current = current
-	if p.enabled {
-		p.render()
-	}
-}
-
-// SetPrefix 设置前缀
-func (p *ProgressDisplay) SetPrefix(prefix string) {
-	p.prefix = prefix
-}
-
-// Finish 完成进度
-func (p *ProgressDisplay) Finish() {
-	if p.enabled {
-		fmt.Fprintln(p.output)
-	}
-}
-
-// render 渲染进度条
-func (p *ProgressDisplay) render() {
-	if p.total == 0 {
+// Start 开始展示
+func (pd *ProgressDisplay) Start() {
+	pd.mu.Lock()
+	defer pd.mu.Unlock()
+	
+	if pd.started {
 		return
 	}
 	
-	percent := float64(p.current) / float64(p.total)
-	barWidth := 30
-	filled := int(percent * float64(barWidth))
+	if pd.isTerminal {
+		// 交互式终端使用 Area 打印器
+		pd.area, _ = pterm.DefaultArea.
+			WithRemoveWhenDone(true).
+			Start()
+	}
 	
-	bar := SuccessStyle.Render(strings.Repeat("█", filled)) +
-		MutedStyle.Render(strings.Repeat("░", barWidth-filled))
-	
-	fmt.Fprintf(p.output, "\r%s [%s] %d/%d (%.0f%%)", 
-		p.prefix, bar, p.current, p.total, percent*100)
+	pd.started = true
+	pd.lastUpdate = time.Now()
 }
 
-// CleanupPreview 清理预览
-type CleanupPreview struct {
-	Actions         []types.CleanupAction
-	TotalSize       int64
-	SafeToDelete    bool
-	Warnings        []string
-	Recommendations []string
-}
-
-// ShowCleanupPreview 显示清理预览
-func (p *ProgressDisplay) ShowCleanupPreview(preview *CleanupPreview) {
-	if !p.enabled {
+// Update 更新进度
+func (pd *ProgressDisplay) Update(progress types.ScanProgress) {
+	pd.mu.Lock()
+	defer pd.mu.Unlock()
+	
+	if !pd.started {
 		return
 	}
 	
-	renderer := NewRenderer()
+	// 频率限制
+	now := time.Now()
+	if now.Sub(pd.lastUpdate) < pd.minInterval && !progress.IsComplete {
+		return
+	}
+	pd.lastUpdate = now
+	
+	// 构建显示内容
+	content := pd.buildProgressContent(progress)
+	
+	if pd.isTerminal && pd.area != nil {
+		// 交互式终端：原地更新
+		pd.area.Update(content)
+	}
+	// 非交互式终端：不输出中间进度，只在完成时输出
+}
+
+// Stop 停止展示
+func (pd *ProgressDisplay) Stop() {
+	pd.mu.Lock()
+	defer pd.mu.Unlock()
+	
+	if pd.area != nil && pd.started {
+		pd.area.Stop()
+	}
+	pd.started = false
+}
+
+// buildProgressContent 构建进度显示内容
+func (pd *ProgressDisplay) buildProgressContent(progress types.ScanProgress) string {
+	var sb strings.Builder
 	
 	// 标题
-	titleStyle := lipgloss.NewStyle().
-		Bold(true).
-		Foreground(PrimaryColor)
+	title := pterm.NewStyle(pterm.FgCyan, pterm.Bold).Sprint("Scanning Kiro storage...")
+	sb.WriteString(title + "\n\n")
 	
-	fmt.Fprintln(p.output, titleStyle.Render("\n📋 清理预览"))
-	fmt.Fprintln(p.output, MutedStyle.Render(strings.Repeat("─", 40)))
+	// 当前路径
+	path := truncatePath(progress.CurrentPath, 50)
+	pathLine := fmt.Sprintf("  📁 %s\n", pterm.NewStyle(pterm.FgGray).Sprint(path))
+	sb.WriteString(pathLine)
+	sb.WriteString("\n")
 	
-	// 操作数量
-	fmt.Fprintf(p.output, "  待执行操作: %s\n", NumberStyle.Render(fmt.Sprintf("%d", len(preview.Actions))))
-	fmt.Fprintf(p.output, "  预计释放:   %s\n", NumberStyle.Render(formatSize(preview.TotalSize)))
+	// 统计信息
+	filesStr := pterm.NewStyle(pterm.FgWhite, pterm.Bold).Sprintf("%d", progress.ScannedFiles)
+	sizeStr := pterm.NewStyle(pterm.FgGreen, pterm.Bold).Sprint(storage.FormatSize(progress.TotalSize))
+	statsLine := fmt.Sprintf("  Files: %s    Size: %s\n", filesStr, sizeStr)
+	sb.WriteString(statsLine)
+	sb.WriteString("\n")
 	
-	// 安全状态
-	if preview.SafeToDelete {
-		fmt.Fprintln(p.output, renderer.RenderSuccess("所有操作安全"))
-	} else {
-		fmt.Fprintln(p.output, renderer.RenderWarning("部分操作需要确认"))
+	// 类型分类
+	typeOrder := []struct {
+		key   string
+		name  string
+		color pterm.Color
+	}{
+		{"log", "Logs", pterm.FgYellow},
+		{"cache", "Cache", pterm.FgBlue},
+		{"temp", "Temp", pterm.FgRed},
+		{"index", "Index", pterm.FgGreen},
+		{"chat", "Chats", pterm.FgCyan},
+		{"history", "History", pterm.FgMagenta},
 	}
 	
-	// 警告
-	if len(preview.Warnings) > 0 {
-		fmt.Fprintln(p.output, "\n⚠️ 警告:")
-		for _, w := range preview.Warnings {
-			fmt.Fprintf(p.output, "  • %s\n", WarningStyle.Render(w))
+	for _, t := range typeOrder {
+		count := progress.TypeCounts[t.key]
+		size := progress.TypeSizes[t.key]
+		
+		if count > 0 {
+			bullet := pterm.NewStyle(t.color).Sprint("●")
+			name := pterm.NewStyle(pterm.FgWhite).Sprintf("%-8s", t.name)
+			countStr := pterm.NewStyle(pterm.FgGray).Sprintf("%4d files", count)
+			sizeStr := pterm.NewStyle(t.color).Sprintf("%10s", storage.FormatSize(size))
+			
+			line := fmt.Sprintf("  %s %s %s  %s\n", bullet, name, countStr, sizeStr)
+			sb.WriteString(line)
 		}
 	}
 	
-	// 建议
-	if len(preview.Recommendations) > 0 {
-		fmt.Fprintln(p.output, "\n💡 建议:")
-		for _, r := range preview.Recommendations {
-			fmt.Fprintf(p.output, "  • %s\n", r)
-		}
+	return sb.String()
+}
+
+// truncatePath 截断路径显示
+func truncatePath(path string, maxLen int) string {
+	if len(path) <= maxLen {
+		return path
 	}
 	
-	fmt.Fprintln(p.output)
+	// 保留路径末尾部分
+	return "..." + path[len(path)-maxLen+3:]
 }
 
-// formatSize 格式化大小
-func formatSize(bytes int64) string {
-	const (
-		KB = 1024
-		MB = 1024 * KB
-		GB = 1024 * MB
-	)
-	
-	switch {
-	case bytes >= GB:
-		return fmt.Sprintf("%.2f GB", float64(bytes)/GB)
-	case bytes >= MB:
-		return fmt.Sprintf("%.2f MB", float64(bytes)/MB)
-	case bytes >= KB:
-		return fmt.Sprintf("%.2f KB", float64(bytes)/KB)
-	default:
-		return fmt.Sprintf("%d B", bytes)
+// GetCallback 获取进度回调函数
+func (pd *ProgressDisplay) GetCallback() types.ProgressCallback {
+	return func(progress types.ScanProgress) {
+		pd.Update(progress)
 	}
-}
-
-// SimplePrompter 简单的提示器实现
-type SimplePrompter struct {
-	output io.Writer
-}
-
-// NewSimplePrompter 创建简单提示器
-func NewSimplePrompter(output io.Writer) *SimplePrompter {
-	return &SimplePrompter{output: output}
-}
-
-// Info 显示信息
-func (s *SimplePrompter) Info(message string) {
-	fmt.Fprintln(s.output, MutedStyle.Render("ℹ️ "+message))
-}
-
-// Warning 显示警告
-func (s *SimplePrompter) Warning(message string) {
-	fmt.Fprintln(s.output, WarningStyle.Render("⚠️ "+message))
-}
-
-// Success 显示成功
-func (s *SimplePrompter) Success(message string) {
-	fmt.Fprintln(s.output, SuccessStyle.Render("✅ "+message))
-}
-
-// Error 显示错误
-func (s *SimplePrompter) Error(message string) {
-	fmt.Fprintln(s.output, ErrorStyle.Render("❌ "+message))
 }

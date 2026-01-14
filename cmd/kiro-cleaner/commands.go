@@ -81,6 +81,7 @@ func init() {
 	// Clean command flags (override global config)
 	cleanCmd.Flags().BoolVar(&dryRun, "dry-run", false, "Preview only, no deletion")
 	cleanCmd.Flags().BoolVarP(&force, "force", "f", false, "Skip confirmation")
+	cleanCmd.Flags().BoolVarP(&yes, "yes", "y", false, "Skip confirmation (same as -f)")
 	cleanCmd.Flags().BoolVar(&killKiro, "kill-kiro", false, "Automatically stop Kiro before cleaning")
 	cleanCmd.Flags().BoolVar(&keepLogs, "keep-logs", false, "Keep log files")
 	cleanCmd.Flags().BoolVar(&keepCache, "keep-cache", false, "Keep cache files")
@@ -95,6 +96,7 @@ func init() {
 var (
 	dryRun      bool
 	force       bool
+	yes         bool
 	killKiro    bool
 	keepLogs    bool
 	keepCache   bool
@@ -114,11 +116,33 @@ func defaultInstallPath() string {
 
 // runScan 扫描存储
 func runScan(cmd *cobra.Command, args []string) error {
-	spinner := termUI.Spinner("Scanning Kiro storage...")
+	// 创建进度展示
+	progressDisplay := ui.NewProgressDisplay()
+	progressDisplay.Start()
+	
+	// 合并进度的回调
+	progress := types.NewScanProgress()
+	callback := func(p types.ScanProgress) {
+		// 合并文件扫描和对话扫描的进度
+		if p.Phase == "chats" {
+			// 对话扫描阶段，累加到已有进度
+			progress.Phase = "chats"
+			progress.ScannedFiles += p.ScannedFiles - progress.TypeCounts["chat"]
+			progress.TotalSize += p.TotalSize - progress.TypeSizes["chat"]
+			progress.TypeCounts["chat"] = p.TypeCounts["chat"]
+			progress.TypeSizes["chat"] = p.TypeSizes["chat"]
+			progress.CurrentPath = p.CurrentPath
+			progress.IsComplete = p.IsComplete
+		} else {
+			// 文件扫描阶段，直接使用
+			*progress = p
+		}
+		progressDisplay.Update(*progress)
+	}
 	
 	// 扫描文件
 	fileScanner := scanner.NewFileScanner()
-	files, _ := fileScanner.Scan()
+	files, _ := fileScanner.ScanWithProgress(callback)
 	stats, _ := fileScanner.GetStorageStats()
 	if stats == nil {
 		stats = &types.StorageStats{FileCounts: make(map[string]int)}
@@ -126,12 +150,16 @@ func runScan(cmd *cobra.Command, args []string) error {
 	
 	// 扫描对话
 	chatScanner := scanner.NewChatScanner()
+	chatScanner.ScanWorkspacesWithProgress(callback)
 	convStats, _ := chatScanner.GetConversationStats()
 	if convStats == nil {
 		convStats = &types.ConversationStats{}
 	}
 	
-	spinner.Success("Scan complete")
+	// 停止进度展示
+	progressDisplay.Stop()
+	
+	termUI.PrintSuccess("Scan complete")
 	fmt.Println()
 	
 	// 显示结果
@@ -143,6 +171,9 @@ func runScan(cmd *cobra.Command, args []string) error {
 func runClean(cmd *cobra.Command, args []string) error {
 	// 加载全局配置
 	cfg := config.LoadConfig()
+	
+	// -y 和 -f 效果相同，合并处理
+	skipConfirm := force || yes
 	
 	// 命令行参数覆盖全局配置
 	if !cmd.Flags().Changed("keep-logs") {
@@ -173,7 +204,7 @@ func runClean(cmd *cobra.Command, args []string) error {
 			spinner.Fail("Failed to stop Kiro")
 			termUI.PrintWarning(fmt.Sprintf("Could not stop Kiro: %v", err))
 			termUI.PrintInfo("Try closing Kiro manually or use --force to continue anyway")
-			if !force {
+			if !skipConfirm {
 				return nil
 			}
 		} else {
@@ -258,7 +289,7 @@ func runClean(cmd *cobra.Command, args []string) error {
 	if running && !dryRun {
 		termUI.PrintWarning("Kiro is running, some files may be locked")
 		termUI.PrintInfo("Use --kill-kiro to automatically stop Kiro before cleaning")
-		if !force {
+		if !skipConfirm {
 			if !termUI.Confirm("Continue anyway?") {
 				pterm.Info.Println("Cancelled")
 				return nil
@@ -321,7 +352,7 @@ func runClean(cmd *cobra.Command, args []string) error {
 	}
 	
 	// 确认
-	if !force {
+	if !skipConfirm {
 		if !termUI.Confirm("Delete these files?") {
 			pterm.Info.Println("Cancelled")
 			return nil

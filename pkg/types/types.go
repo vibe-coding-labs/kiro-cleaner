@@ -281,3 +281,32 @@ type CleanableConversation struct {
 	ModTime time.Time `json:"mod_time"` // 修改时间
 	Reason  string    `json:"reason"`   // 清理原因: "old" 或 "large"
 }
+
+
+// ============================================
+// Scan Progress 相关类型 (用于扫描进度展示)
+// ============================================
+
+// ScanProgress 扫描进度信息
+type ScanProgress struct {
+	CurrentPath  string           `json:"current_path"`  // 当前扫描路径
+	ScannedFiles int              `json:"scanned_files"` // 已扫描文件数
+	ScannedDirs  int              `json:"scanned_dirs"`  // 已扫描目录数
+	TotalSize    int64            `json:"total_size"`    // 已发现总大小
+	TypeCounts   map[string]int   `json:"type_counts"`   // 各类型文件数量
+	TypeSizes    map[string]int64 `json:"type_sizes"`    // 各类型文件大小
+	Phase        string           `json:"phase"`         // 扫描阶段: "files", "chats"
+	IsComplete   bool             `json:"is_complete"`   // 是否完成
+}
+
+// ProgressCallback 进度回调函数类型
+type ProgressCallback func(progress ScanProgress)
+
+// NewScanProgress 创建新的扫描进度
+func NewScanProgress() *ScanProgress {
+	return &ScanProgress{
+		TypeCounts: make(map[string]int),
+		TypeSizes:  make(map[string]int64),
+		Phase:      "files",
+	}
+}
