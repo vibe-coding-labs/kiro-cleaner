@@ -7,7 +7,12 @@ import (
 )
 
 // TestFileScannerWithoutCallback 测试无回调时正常工作
+// 注意：此测试会扫描真实的 Kiro 目录，在 CI 环境中可能很慢
 func TestFileScannerWithoutCallback(t *testing.T) {
+	if testing.Short() {
+		t.Skip("跳过真实文件系统扫描测试")
+	}
+	
 	fs := NewFileScanner()
 	
 	// 无回调应该正常工作（不会 panic）
@@ -19,7 +24,12 @@ func TestFileScannerWithoutCallback(t *testing.T) {
 }
 
 // TestProgressMonotonicallyIncreases 测试进度单调递增
+// 注意：此测试会扫描真实的 Kiro 目录，在 CI 环境中可能很慢
 func TestProgressMonotonicallyIncreases(t *testing.T) {
+	if testing.Short() {
+		t.Skip("跳过真实文件系统扫描测试")
+	}
+	
 	var prevFiles int
 	var prevSize int64
 	var callCount int

@@ -16,7 +16,12 @@ import (
 )
 
 // TestFileScanning 集成测试：文件扫描
+// 注意：此测试会扫描真实的 Kiro 目录，在 CI 环境中可能很慢
 func TestFileScanning(t *testing.T) {
+	if testing.Short() {
+		t.Skip("跳过真实文件系统扫描测试")
+	}
+	
 	// 创建临时测试目录
 	tempDir := filepath.Join(os.TempDir(), "kiro-cleaner-integration-scan-test")
 	os.MkdirAll(tempDir, 0755)
@@ -87,7 +92,12 @@ func TestDatabaseOperations(t *testing.T) {
 }
 
 // TestCleanupWorkflow 集成测试：完整清理工作流程
+// 注意：此测试会扫描真实的 Kiro 目录，在 CI 环境中可能很慢
 func TestCleanupWorkflow(t *testing.T) {
+	if testing.Short() {
+		t.Skip("跳过真实文件系统扫描测试")
+	}
+	
 	// 创建临时测试目录
 	tempDir := filepath.Join(os.TempDir(), "kiro-cleaner-integration-cleanup-test")
 	os.MkdirAll(tempDir, 0755)
