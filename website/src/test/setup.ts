@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest';
 
 // Mock IntersectionObserver for tests
 beforeAll(() => {
-  global.IntersectionObserver = class IntersectionObserver {
+  (globalThis as any).IntersectionObserver = class IntersectionObserver {
     constructor(
       public callback: IntersectionObserverCallback,
       public options?: IntersectionObserverInit
@@ -45,7 +45,7 @@ beforeAll(() => {
   } as unknown as typeof IntersectionObserver;
 
   // Mock ResizeObserver for Ant Design components
-  global.ResizeObserver = class ResizeObserver {
+  (globalThis as any).ResizeObserver = class ResizeObserver {
     constructor(public callback: ResizeObserverCallback) {}
     observe() {}
     unobserve() {}
@@ -69,7 +69,7 @@ beforeAll(() => {
 
   // Mock CSS.supports for tests
   if (typeof CSS === 'undefined') {
-    (global as any).CSS = {};
+    (globalThis as any).CSS = {};
   }
   if (!CSS.supports) {
     CSS.supports = (property: string, value?: string) => {

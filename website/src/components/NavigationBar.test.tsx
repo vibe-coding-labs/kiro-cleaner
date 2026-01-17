@@ -150,8 +150,8 @@ describe('NavigationBar Component', () => {
   describe('Property 3: Navigation maintains flat design on mobile', () => {
     it('should have no shadows at mobile viewport width', () => {
       // Set viewport to mobile size
-      global.innerWidth = 375;
-      global.dispatchEvent(new Event('resize'));
+      (window as any).innerWidth = 375;
+      window.dispatchEvent(new Event('resize'));
       
       const { container } = renderNavigationBar();
       const appBar = container.querySelector('.MuiAppBar-root');
@@ -162,8 +162,8 @@ describe('NavigationBar Component', () => {
 
     it('should have no shadows at tablet viewport width', () => {
       // Set viewport to tablet size
-      global.innerWidth = 768;
-      global.dispatchEvent(new Event('resize'));
+      (window as any).innerWidth = 768;
+      window.dispatchEvent(new Event('resize'));
       
       const { container } = renderNavigationBar();
       const appBar = container.querySelector('.MuiAppBar-root');
@@ -174,8 +174,8 @@ describe('NavigationBar Component', () => {
 
     it('should have no shadows at desktop viewport width', () => {
       // Set viewport to desktop size
-      global.innerWidth = 1920;
-      global.dispatchEvent(new Event('resize'));
+      (window as any).innerWidth = 1920;
+      window.dispatchEvent(new Event('resize'));
       
       const { container } = renderNavigationBar();
       const appBar = container.querySelector('.MuiAppBar-root');
@@ -190,8 +190,8 @@ describe('NavigationBar Component', () => {
         fc.property(
           fc.integer({ min: 320, max: 2560 }), // Common viewport range
           (viewportWidth) => {
-            global.innerWidth = viewportWidth;
-            global.dispatchEvent(new Event('resize'));
+            (window as any).innerWidth = viewportWidth;
+            window.dispatchEvent(new Event('resize'));
             
             const { container } = render(
               <ThemeProvider theme={flatTheme}>

@@ -12,3 +12,9 @@ export const supportsViewTransitions = (): boolean => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return false;
   return 'startViewTransition' in document;
 };
+
+// Deprecated: Kept for backward compatibility
+export const getGlassmorphismStyles = () => ({
+  backgroundColor: 'transparent',
+  backdropFilter: 'none',
+});
