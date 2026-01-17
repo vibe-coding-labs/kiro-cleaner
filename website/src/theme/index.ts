@@ -5,5 +5,4 @@
  */
 
 export { modernTheme } from './modernTheme';
-export { premiumTheme } from './premiumTheme';
-export { default as ThemeErrorBoundary } from './ThemeErrorBoundary';
+export { flatTheme } from './flatTheme';
