@@ -12,26 +12,26 @@ import { colorTokens } from '../theme/tokens';
 const UseCases: React.FC = () => {
   const useCases = [
     {
+      icon: <Speed sx={{ fontSize: 40 }} />,
+      title: 'IDE 运行缓慢',
+      scenario: '当 Kiro IDE 响应变慢、卡顿严重',
+      solution: '本地缓存过大是主要原因！清理冗余数据后，IDE 立即起飞，响应速度显著提升。',
+      stats: '性能提升明显',
+      color: colorTokens.semantic.success,
+    },
+    {
       icon: <Storage sx={{ fontSize: 40 }} />,
       title: '存储空间不足',
       scenario: '当你的磁盘空间告急',
-      solution: 'Kiro Cleaner 可以快速释放数GB的存储空间，清理对话历史、缓存和临时文件',
-      stats: '平均释放 2-5GB',
+      solution: 'Kiro Cleaner 可以清理对话历史、缓存和临时文件，释放大量存储空间。',
+      stats: '释放存储空间',
       color: colorTokens.brand.primary,
-    },
-    {
-      icon: <Speed sx={{ fontSize: 40 }} />,
-      title: 'IDE 运行缓慢',
-      scenario: '当 Kiro IDE 响应变慢',
-      solution: '清理冗余数据可以显著提升 IDE 性能，让 AI 助手响应更快速',
-      stats: '性能提升 30-50%',
-      color: colorTokens.semantic.success,
     },
     {
       icon: <Code sx={{ fontSize: 40 }} />,
       title: '项目切换频繁',
       scenario: '当你在多个项目间切换',
-      solution: '定期清理可以避免项目数据混乱，保持工作环境整洁有序',
+      solution: '定期清理可以避免项目数据混乱，保持 IDE 运行流畅。',
       stats: '支持批量清理',
       color: colorTokens.brand.secondary,
     },
@@ -39,8 +39,8 @@ const UseCases: React.FC = () => {
       icon: <TrendingUp sx={{ fontSize: 40 }} />,
       title: '长期使用维护',
       scenario: '当你长期使用 Kiro IDE',
-      solution: '定期维护可以防止数据累积，保持 IDE 始终处于最佳状态',
-      stats: '建议每月清理',
+      solution: '定期维护可以防止数据累积，避免性能下降。',
+      stats: '建议定期清理',
       color: colorTokens.semantic.warning,
     },
   ];
@@ -92,7 +92,7 @@ const UseCases: React.FC = () => {
               lineHeight: 1.7,
             }}
           >
-            无论是日常维护还是紧急清理，Kiro Cleaner 都能帮你快速解决问题
+            Kiro Cleaner 适用的场景
           </Typography>
         </Box>
 
@@ -107,12 +107,12 @@ const UseCases: React.FC = () => {
                   backgroundColor: colorTokens.background.subtle,
                   border: `1px solid ${colorTokens.border.default}`,
                   borderRadius: '4px',
+                  boxShadow: 'none',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   position: 'relative',
                   overflow: 'hidden',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: `0 20px 40px ${useCase.color}20`,
                     borderColor: useCase.color,
                     '& .use-case-icon': {
                       transform: 'scale(1.1) rotate(5deg)',

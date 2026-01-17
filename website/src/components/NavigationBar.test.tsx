@@ -222,8 +222,8 @@ describe('NavigationBar Component', () => {
     it('should render all navigation links', () => {
       renderNavigationBar();
       expect(screen.getByText('特性')).toBeInTheDocument();
-      expect(screen.getByText('演示')).toBeInTheDocument();
-      expect(screen.getByText('安装')).toBeInTheDocument();
+      expect(screen.getByText('场景')).toBeInTheDocument();
+      expect(screen.getByText('FAQ')).toBeInTheDocument();
       expect(screen.getByText('GitHub')).toBeInTheDocument();
     });
 

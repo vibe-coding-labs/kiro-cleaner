@@ -9,5 +9,4 @@ export * from './responsive';
 export * from './performanceDetection';
 export * from './accessibility';
 export * from './featureDetection';
-export * from './gradientFallbacks';
 export * from './designSystemValidation';

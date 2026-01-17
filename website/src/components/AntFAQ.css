@@ -1,0 +1,149 @@
+.ant-faq {
+  padding: 80px 24px;
+  background-color: #ffffff;
+}
+
+.ant-faq-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ant-faq-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.ant-faq-overline {
+  color: #1890ff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.ant-faq-title {
+  font-weight: 800;
+  font-size: 40px;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 16px;
+}
+
+.ant-faq-subtitle {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.ant-faq-collapse {
+  background: transparent;
+}
+
+.ant-faq-collapse .ant-collapse-item {
+  margin-bottom: 16px;
+  background-color: #fafafa;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.ant-faq-collapse .ant-collapse-item:last-child {
+  margin-bottom: 0;
+}
+
+.ant-faq-collapse .ant-collapse-item-active {
+  border-color: #1890ff;
+}
+
+.ant-faq-collapse .ant-collapse-header {
+  padding: 16px 24px;
+  min-height: 44px;
+  align-items: center;
+}
+
+.ant-faq-collapse .ant-collapse-content {
+  border-top: 1px solid #d9d9d9;
+}
+
+.ant-faq-collapse .ant-collapse-content-box {
+  padding: 16px 24px;
+}
+
+.ant-faq-question {
+  font-weight: 600;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.ant-faq-answer {
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.ant-faq-contact {
+  margin-top: 48px;
+  background-color: rgba(24, 144, 255, 0.05);
+  border: 1px solid rgba(24, 144, 255, 0.2);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.ant-faq-contact .ant-card-body {
+  padding: 32px;
+}
+
+.ant-faq-contact-title {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 8px;
+}
+
+.ant-faq-contact-text {
+  color: rgba(0, 0, 0, 0.65);
+  margin-bottom: 16px;
+}
+
+.ant-faq-contact-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ant-faq-contact-link {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.ant-faq-contact-link:hover {
+  text-decoration: underline;
+}
+
+.ant-faq-contact-separator {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+@media (max-width: 768px) {
+  .ant-faq {
+    padding: 60px 16px;
+  }
+
+  .ant-faq-title {
+    font-size: 32px;
+  }
+
+  .ant-faq-question {
+    font-size: 16px;
+  }
+
+  .ant-faq-collapse .ant-collapse-header {
+    padding: 12px 16px;
+  }
+
+  .ant-faq-collapse .ant-collapse-content-box {
+    padding: 12px 16px;
+  }
+}

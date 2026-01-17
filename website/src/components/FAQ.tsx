@@ -18,36 +18,28 @@ const FAQ: React.FC = () => {
 
   const faqs = [
     {
+      question: 'Kiro IDE 变卡了，清理真的有用吗？',
+      answer: '非常有用！当本地缓存过大时，Kiro IDE 会明显变慢、卡顿。使用 Kiro Cleaner 清理冗余数据后，IDE 响应速度会显著提升，立即起飞！',
+    },
+    {
       question: 'Kiro Cleaner 会删除我的重要数据吗？',
-      answer: '不会。Kiro Cleaner 采用智能规则引擎，只清理缓存、临时文件和旧的对话历史等冗余数据。在清理前会自动创建完整备份，确保数据安全。你可以随时恢复被清理的数据。',
+      answer: '不会。Kiro Cleaner 只清理缓存、临时文件和旧的对话历史等冗余数据。清理前会自动创建备份，你可以随时恢复。',
     },
     {
       question: '清理后 Kiro IDE 还能正常工作吗？',
-      answer: '完全可以。Kiro Cleaner 只清理不影响 IDE 正常运行的冗余数据。清理后，IDE 会自动重建必要的缓存和索引，不会影响任何功能。实际上，清理后 IDE 的性能通常会有所提升。',
+      answer: '可以。Kiro Cleaner 只清理不影响 IDE 正常运行的冗余数据。清理后，IDE 会自动重建必要的缓存和索引。',
     },
     {
       question: '多久清理一次比较合适？',
-      answer: '建议每月清理一次，或者当你发现磁盘空间不足、IDE 运行缓慢时进行清理。Kiro Cleaner 的扫描功能可以帮你评估当前的数据使用情况，决定是否需要清理。',
-    },
-    {
-      question: '清理能释放多少存储空间？',
-      answer: '这取决于你的使用情况。一般来说，长期使用的 Kiro IDE 可以释放 2-5GB 的空间。如果你有大量的对话历史和缓存文件，释放的空间可能更多。使用扫描功能可以预览清理效果。',
+      answer: '建议根据实际使用情况定期清理。如果发现 IDE 变慢或磁盘空间不足时，就该清理了。',
     },
     {
       question: '支持哪些操作系统？',
-      answer: 'Kiro Cleaner 支持 macOS (Intel 和 Apple Silicon)、Linux (x86_64 和 ARM64) 以及 Windows (x86_64)。我们提供预编译的二进制文件，也支持从源码构建。',
+      answer: 'Kiro Cleaner 支持 macOS (Intel 和 Apple Silicon)、Linux (x86_64 和 ARM64) 以及 Windows (x86_64)。',
     },
     {
       question: '如何恢复被清理的数据？',
-      answer: 'Kiro Cleaner 在清理前会自动创建备份。你可以使用 restore 命令恢复最近的备份。备份文件默认保存在 ~/.kiro-cleaner/backups 目录，支持压缩和加密。',
-    },
-    {
-      question: '是否需要停止 Kiro IDE 才能清理？',
-      answer: '建议在清理前关闭 Kiro IDE，以确保所有数据都已保存。Kiro Cleaner 会检测 IDE 是否正在运行，如果检测到运行中的实例，会提示你先关闭 IDE。',
-    },
-    {
-      question: '清理过程需要多长时间？',
-      answer: '扫描通常只需要几秒钟，清理过程取决于数据量，一般在 1-5 分钟内完成。大型数据库可能需要更长时间。你可以使用 --verbose 选项查看详细的进度信息。',
+      answer: 'Kiro Cleaner 在清理前会自动创建备份。你可以使用 restore 命令恢复最近的备份。',
     },
   ];
 
@@ -111,13 +103,13 @@ const FAQ: React.FC = () => {
                 backgroundColor: colorTokens.background.subtle,
                 border: `1px solid ${colorTokens.border.default}`,
                 borderRadius: '12px !important',
+                boxShadow: 'none',
                 '&:before': {
                   display: 'none',
                 },
                 '&.Mui-expanded': {
                   margin: '0 0 16px 0',
                   borderColor: colorTokens.brand.primary,
-                  boxShadow: `0 4px 12px ${colorTokens.brand.primary}20`,
                 },
               }}
             >

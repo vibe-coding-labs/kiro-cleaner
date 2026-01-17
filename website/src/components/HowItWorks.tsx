@@ -14,25 +14,24 @@ const HowItWorks: React.FC = () => {
     {
       icon: <Search sx={{ fontSize: 48 }} />,
       number: '01',
-      title: '智能扫描',
-      description: '自动检测 Kiro IDE 数据存储位置，分析数据库、缓存、日志文件的使用情况',
+      title: '扫描',
+      description: '检测 Kiro IDE 数据存储位置，分析数据库、缓存和日志文件',
       details: [
         '扫描对话历史数据库',
-        '检测缓存文件大小',
-        '分析临时文件占用',
-        '识别可清理的冗余数据'
+        '检测缓存文件',
+        '分析临时文件',
+        '识别可清理的数据'
       ],
       color: colorTokens.brand.primary,
     },
     {
       icon: <Assessment sx={{ fontSize: 48 }} />,
       number: '02',
-      title: '预览分析',
-      description: '生成详细的清理报告，让你清楚了解哪些数据会被清理，预计释放多少空间',
+      title: '预览',
+      description: '生成清理报告，显示哪些数据会被清理',
       details: [
         '显示可清理数据类型',
         '预估释放空间大小',
-        '标注数据重要程度',
         '提供清理建议'
       ],
       color: colorTokens.brand.secondary,
@@ -40,12 +39,11 @@ const HowItWorks: React.FC = () => {
     {
       icon: <CleaningServices sx={{ fontSize: 48 }} />,
       number: '03',
-      title: '安全清理',
-      description: '自动创建备份后执行清理，基于规则引擎确保不会误删重要数据',
+      title: '清理',
+      description: '自动创建备份后执行清理',
       details: [
         '清理前自动备份',
-        '支持压缩和加密',
-        '智能规则匹配',
+        '支持压缩',
         '保留重要数据'
       ],
       color: colorTokens.semantic.success,
@@ -53,12 +51,11 @@ const HowItWorks: React.FC = () => {
     {
       icon: <CheckCircle sx={{ fontSize: 48 }} />,
       number: '04',
-      title: '完成验证',
-      description: '清理完成后生成对比报告，展示清理效果，支持一键恢复',
+      title: '完成',
+      description: '清理完成后生成对比报告',
       details: [
         '清理前后对比',
         '空间释放统计',
-        '性能提升报告',
         '支持快速恢复'
       ],
       color: colorTokens.brand.accent,
@@ -99,7 +96,7 @@ const HowItWorks: React.FC = () => {
               color: colorTokens.text.primary,
             }}
           >
-            四步完成数据清理
+            使用流程
           </Typography>
           <Typography
             variant="h6"
@@ -111,7 +108,7 @@ const HowItWorks: React.FC = () => {
               lineHeight: 1.7,
             }}
           >
-            简单、安全、高效的清理流程，让你放心使用
+            简单的清理流程
           </Typography>
         </Box>
 
@@ -127,17 +124,15 @@ const HowItWorks: React.FC = () => {
                   backgroundColor: colorTokens.background.subtle,
                   border: `1px solid ${colorTokens.border.default}`,
                   borderRadius: '4px',
+                  boxShadow: 'none',
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  // CSS containment for performance (Requirements 7.4)
+                  // CSS containment for performance
                   contain: 'layout style paint',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: `0 20px 40px ${step.color}20`,
                     borderColor: step.color,
-                    // will-change on hover (Requirements 7.4)
-                    willChange: 'transform, box-shadow',
                     '& .step-number': {
                       transform: 'scale(1.1)',
                       color: step.color,
@@ -161,8 +156,6 @@ const HowItWorks: React.FC = () => {
                     color: `${step.color}15`,
                     lineHeight: 1,
                     transition: 'all 0.3s ease',
-                    // will-change for step number animation (Requirements 7.4)
-                    willChange: 'transform, color',
                   }}
                 >
                   {step.number}
@@ -179,8 +172,6 @@ const HowItWorks: React.FC = () => {
                     color: step.color,
                     mb: 3,
                     transition: 'all 0.3s ease',
-                    // will-change for icon animation (Requirements 7.4)
-                    willChange: 'transform, color',
                   }}
                 >
                   {step.icon}

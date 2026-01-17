@@ -22,6 +22,9 @@ go.work
 *.swo
 *~
 .vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+*.code-workspace
 
 # OS generated files
 .DS_Store
@@ -31,6 +34,7 @@ go.work
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
 
 # Build output
 /build/
@@ -43,6 +47,8 @@ dist/
 test-kiro-data/cache/*
 test-kiro-data/logs/*
 test-kiro-data/temp/*
+test-kiro-data/conversations.db-shm/
+test-kiro-data/conversations.db-wal/
 !test-kiro-data/cache/.gitkeep
 !test-kiro-data/logs/.gitkeep
 !test-kiro-data/temp/.gitkeep
@@ -51,6 +57,7 @@ test-kiro-data/temp/*
 *.bak
 *.backup
 *.old
+*.orig
 
 # Log files
 *.log
@@ -58,48 +65,191 @@ test-kiro-data/temp/*
 # Local config
 .env
 .env.local
+.env.*.local
 config.local.json
 
 # Temporary files
 tmp/
 temp/
+*.tmp
 
-# Node modules
+# Node modules (for website)
 node_modules/
 
 # Build outputs
 dist/
 build/
 *.tsbuildinfo
+out/
 
 # Test coverage
 coverage/
 .nyc_output/
+*.lcov
 
 # Cache directories
 .cache/
 .parcel-cache/
 .vite/
+.turbo/
+.next/
+.nuxt/
 
-# Lock files (keep package-lock.json for reproducibility)
-# yarn.lock
-# pnpm-lock.yaml
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Editor directories
-.vscode/
-.idea/
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Kiro IDE data
+.kiro/data/
+.kiro/cache/
+.kiro/logs/
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
+Icon
+._*
 
-# Kiro data
-test-kiro-data/cache/*
-test-kiro-data/logs/*
-test-kiro-data/temp/*
-test-kiro-data/conversations.db-shm/
-test-kiro-data/conversations.db-wal/
-!test-kiro-data/cache/.gitkeep
-!test-kiro-data/logs/.gitkeep
-!test-kiro-data/temp/.gitkeep
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+*.vsix
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Go specific
+vendor/
+*.prof
+*.test
+*.bench
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app

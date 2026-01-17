@@ -1,77 +1,27 @@
 import React from 'react';
-import { Container, Box, Typography, Button, Stack, Chip, Avatar } from '@mui/material';
+import { Container, Box, Typography, Button, Stack, Chip } from '@mui/material';
 import { Download, ArrowForward, Speed, Security, CloudDone } from '@mui/icons-material';
-import { colorTokens } from '../theme/tokens';
-import { effectTokens } from '../theme/tokens/effects';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import GradientText from './premium/GradientText';
-import { getResponsiveSpacing, getResponsiveFontSize } from '../utils/responsive';
-import { getFocusVisibleStyles, getAccessibleAnimation } from '../utils/accessibility';
+import { flatColors } from '../theme/colors';
 
 const HeroSection: React.FC = () => {
-  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1, triggerOnce: true });
-
   return (
     <Box 
-      ref={ref as any}
       sx={{ 
         position: 'relative',
         minHeight: '85vh',
         display: 'flex',
         alignItems: 'center',
-        overflow: 'hidden',
-        // CSS containment for performance (Requirements 7.4)
-        contain: 'layout style',
-        // Mesh gradient background (Requirements 2.2)
-        background: effectTokens.mesh.hero,
-        backgroundColor: colorTokens.background.paper,
-        pt: getResponsiveSpacing(12, 8), // Responsive padding (Requirements 7.1, 7.2)
-        pb: getResponsiveSpacing(12, 8),
-        
-        // Animated gradient overlay (Requirements 2.2)
-        // Lazy load: only animate when visible (Requirements 7.4)
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          inset: 0,
-          background: `linear-gradient(135deg, ${colorTokens.brand.primary}15 0%, ${colorTokens.brand.secondary}15 50%, ${colorTokens.brand.accent}15 100%)`,
-          opacity: 0.3,
-          animation: isVisible ? 'gradient-shift 10s ease infinite' : 'none',
-          backgroundSize: '200% 200%',
-          zIndex: 0,
-          // will-change for animated gradient (Requirements 7.4)
-          willChange: isVisible ? 'background-position' : 'auto',
-        },
-        
-        '@keyframes gradient-shift': {
-          '0%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-          '100%': { backgroundPosition: '0% 50%' },
-        },
+        backgroundColor: flatColors.background,
+        pt: { xs: 8, md: 12 },
+        pb: { xs: 8, md: 12 },
       }}
     >
-      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+      <Container maxWidth="lg">
         <Box 
           display="grid" 
           gridTemplateColumns={{ xs: '1fr', md: 'repeat(2, 1fr)' }} 
           gap={6}
           alignItems="center"
-          sx={{
-            // Fade-in animation with accessibility support (Requirements 2.5, 4.5, 1.2)
-            ...getAccessibleAnimation(
-              {
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                // will-change for fade-in animation (Requirements 7.4)
-                willChange: isVisible ? 'auto' : 'opacity, transform',
-              },
-              {
-                opacity: 1,
-                transform: 'translateY(0)',
-              }
-            ),
-          }}
         >
           {/* Left Content */}
           <Box>
@@ -79,84 +29,58 @@ const HeroSection: React.FC = () => {
               {/* Status Badge */}
               <Box>
                 <Chip
-                  avatar={
-                    <Avatar sx={{ bgcolor: colorTokens.semantic.success, width: 24, height: 24 }}>
-                      <Box
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          backgroundColor: colorTokens.background.paper,
-                          // Lazy load: only animate when visible (Requirements 7.4)
-                          animation: isVisible ? 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' : 'none',
-                          // will-change for pulse animation (Requirements 7.4)
-                          willChange: isVisible ? 'opacity' : 'auto',
-                          '@keyframes pulse': {
-                            '0%, 100%': { opacity: 1 },
-                            '50%': { opacity: 0.5 },
-                          },
-                        }}
-                      />
-                    </Avatar>
-                  }
                   label="开源免费 · 持续更新"
                   sx={{
-                    backgroundColor: colorTokens.semantic.successLight,
-                    color: colorTokens.semantic.success,
+                    backgroundColor: flatColors.secondaryLight,
+                    color: flatColors.secondary,
                     fontWeight: 600,
                     fontSize: '0.875rem',
                     height: 36,
-                    '& .MuiChip-avatar': {
-                      marginLeft: '8px',
-                    },
                   }}
                 />
               </Box>
 
-              {/* Main Headline - Using GradientText component (Requirements 1.1) */}
+              {/* Main Headline */}
               <Box>
                 <Typography 
                   variant="h1" 
                   component="h1"
                   sx={{ 
-                    fontSize: getResponsiveFontSize('4rem', '2.5rem'), // Responsive font size (Requirements 7.1, 7.2)
+                    fontSize: { xs: '2.5rem', md: '4rem' },
                     fontWeight: 800,
                     lineHeight: 1.1,
-                    color: colorTokens.text.primary,
+                    color: flatColors.textPrimary,
+                    mb: 1,
                   }}
                 >
                   让 Kiro IDE
                 </Typography>
-                <GradientText
-                  gradient={colorTokens.gradients.heroAlt}
-                  variant="h1"
-                  animate={false}
+                <Typography 
+                  variant="h1" 
+                  component="h1"
+                  sx={{ 
+                    fontSize: { xs: '2.5rem', md: '4rem' },
+                    fontWeight: 800,
+                    lineHeight: 1.1,
+                    color: flatColors.primary,
+                  }}
                 >
-                  <Box
-                    component="span"
-                    sx={{
-                      fontSize: getResponsiveFontSize('4rem', '2.5rem'), // Responsive font size (Requirements 7.1, 7.2)
-                      fontWeight: 800,
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    轻装上阵
-                  </Box>
-                </GradientText>
+                  轻装上阵
+                </Typography>
               </Box>
 
               {/* Subtitle */}
               <Typography 
                 variant="h6"
                 sx={{ 
-                  fontSize: getResponsiveFontSize('1.25rem', '1.125rem'), // Responsive font size (Requirements 7.1, 7.2)
+                  fontSize: { xs: '1.125rem', md: '1.25rem' },
                   fontWeight: 400,
                   lineHeight: 1.7,
-                  color: colorTokens.text.secondary,
+                  color: flatColors.textSecondary,
                   mb: 2,
                 }}
               >
-                智能扫描、安全清理、自动备份。一键释放存储空间，让你的 AI 助手运行更流畅。
+                Kiro IDE 缓存过大导致卡顿？一键清理，立即提速！
               </Typography>
 
               {/* Key Benefits */}
@@ -164,14 +88,14 @@ const HeroSection: React.FC = () => {
                 <Typography 
                   variant="body1"
                   sx={{ 
-                    color: colorTokens.text.secondary,
+                    color: flatColors.textSecondary,
                     lineHeight: 1.8,
                     fontSize: '1rem',
                   }}
                 >
-                  • 平均释放 <strong style={{ color: colorTokens.brand.primary }}>2-5GB</strong> 存储空间<br/>
-                  • 性能提升 <strong style={{ color: colorTokens.brand.primary }}>30-50%</strong><br/>
-                  • 支持 <strong style={{ color: colorTokens.brand.primary }}>macOS、Linux、Windows</strong> 全平台
+                  • <strong style={{ color: flatColors.primary }}>解决卡顿</strong>：清理冗余缓存，IDE 响应速度提升<br/>
+                  • <strong style={{ color: flatColors.primary }}>释放空间</strong>：清理对话历史、临时文件<br/>
+                  • <strong style={{ color: flatColors.primary }}>安全可靠</strong>：自动备份，随时恢复
                 </Typography>
               </Box>
 
@@ -197,16 +121,13 @@ const HeroSection: React.FC = () => {
                     fontWeight: 600,
                     borderRadius: '4px',
                     textTransform: 'none',
-                    backgroundColor: colorTokens.brand.primary,
-                    boxShadow: `0 4px 14px 0 ${colorTokens.brand.primary}40`,
+                    backgroundColor: flatColors.primary,
+                    boxShadow: 'none',
                     '&:hover': {
-                      backgroundColor: colorTokens.brand.primaryDark,
-                      boxShadow: `0 6px 20px 0 ${colorTokens.brand.primary}60`,
-                      transform: 'translateY(-2px)',
+                      backgroundColor: flatColors.primaryDark,
+                      boxShadow: 'none',
                     },
-                    transition: 'all 0.2s ease',
-                    // Focus visible styles (Requirements 1.2)
-                    ...getFocusVisibleStyles(),
+                    transition: 'background-color 0.2s ease',
                   }}
                 >
                   立即开始
@@ -225,17 +146,14 @@ const HeroSection: React.FC = () => {
                     borderRadius: '4px',
                     textTransform: 'none',
                     borderWidth: '2px',
-                    borderColor: colorTokens.neutral[300],
-                    color: colorTokens.text.primary,
+                    borderColor: flatColors.border,
+                    color: flatColors.textPrimary,
                     '&:hover': {
                       borderWidth: '2px',
-                      borderColor: colorTokens.brand.primary,
-                      backgroundColor: colorTokens.brand.primarySubtle,
-                      transform: 'translateY(-2px)',
+                      borderColor: flatColors.primary,
+                      backgroundColor: flatColors.primaryLight,
                     },
                     transition: 'all 0.2s ease',
-                    // Focus visible styles (Requirements 1.2)
-                    ...getFocusVisibleStyles(),
                   }}
                 >
                   了解更多
@@ -251,18 +169,10 @@ const HeroSection: React.FC = () => {
                 position: 'relative',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
-                border: `1px solid ${colorTokens.border.default}`,
-                backgroundColor: colorTokens.background.paper,
-                transition: 'all 0.3s ease',
-                // CSS containment for performance (Requirements 7.4)
-                contain: 'layout style paint',
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: '0 30px 80px rgba(0,0,0,0.2)',
-                  // will-change on hover (Requirements 7.4)
-                  willChange: 'transform, box-shadow',
-                },
+                border: `2px solid ${flatColors.border}`,
+                backgroundColor: '#000',
+                transform: 'scale(1.3)',
+                transformOrigin: 'center',
               }}
             >
               <video
@@ -270,53 +180,20 @@ const HeroSection: React.FC = () => {
                 loop
                 muted
                 playsInline
-                preload="auto"
-                  style={{
+                style={{
                   width: '100%',
                   height: 'auto',
                   display: 'block',
-                  borderRadius: '4px',
-                  objectFit: 'cover',
                 }}
+                key="/assets/demo-clean-command.mov"
               >
-                <source src="/assets/demo-scan-command-hq.mp4" type="video/mp4" />
-                <source src="/assets/demo-scan-command.mov" type="video/quicktime" />
+                <source src="/assets/demo-clean-command.mov" type="video/mp4" />
                 您的浏览器不支持视频播放
               </video>
             </Box>
           </Box>
         </Box>
       </Container>
-
-      {/* Decorative Blobs */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '10%',
-          right: '-5%',
-          width: '400px',
-          height: '400px',
-          borderRadius: '50%',
-          background: colorTokens.gradients.heroAlt,
-          opacity: 0.08,
-          filter: 'blur(80px)',
-          zIndex: 0,
-        }}
-      />
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '-5%',
-          width: '350px',
-          height: '350px',
-          borderRadius: '50%',
-          background: colorTokens.brand.secondary,
-          opacity: 0.08,
-          filter: 'blur(80px)',
-          zIndex: 0,
-        }}
-      />
     </Box>
   );
 };

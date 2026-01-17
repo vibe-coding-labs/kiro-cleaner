@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import { colorTokens } from '../theme/tokens';
-import GlassCard from './premium/GlassCard';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -22,13 +21,14 @@ function CustomTabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 4 }}>
-          {/* Use GlassCard to wrap code block (Requirements 3.3) */}
-          <GlassCard
-            variant="dark"
-            hover={false}
+          {/* Use flat Box to wrap code block - no glassmorphism */}
+          <Box
             sx={{
-              background: colorTokens.neutral[900],
+              backgroundColor: colorTokens.neutral[900],
+              backgroundImage: 'none',
               border: `1px solid ${colorTokens.neutral[800]}`,
+              borderRadius: '4px',
+              padding: 2,
             }}
           >
             <pre style={{ 
@@ -38,10 +38,11 @@ function CustomTabPanel(props: TabPanelProps) {
               margin: 0,
               lineHeight: 1.8,
               overflowX: 'auto',
+              backgroundColor: colorTokens.neutral[900],
             }}>
               {children}
             </pre>
-          </GlassCard>
+          </Box>
         </Box>
       )}
     </div>
@@ -101,13 +102,13 @@ brew install kiro-cleaner`
   ];
 
   return (
-    <GlassCard
-      variant="light"
-      hover={false}
+    <Box
       sx={{ 
         borderRadius: '4px', 
         overflow: 'hidden',
         padding: 0,
+        border: `1px solid ${colorTokens.border.default}`,
+        backgroundColor: colorTokens.background.default,
       }}
     >
       <Box sx={{ borderBottom: `1px solid ${colorTokens.border.default}`, backgroundColor: colorTokens.background.subtle }}>
@@ -153,7 +154,7 @@ brew install kiro-cleaner`
           {method.command}
         </CustomTabPanel>
       ))}
-    </GlassCard>
+    </Box>
   );
 };
 

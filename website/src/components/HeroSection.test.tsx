@@ -19,6 +19,64 @@ const renderHeroSection = () => {
 };
 
 describe('HeroSection Component', () => {
+  describe('Property 1: Video Source Correctness', () => {
+    it('should use clean command video as primary source', () => {
+      const { container } = renderHeroSection();
+      const video = container.querySelector('video');
+      
+      expect(video).toBeInTheDocument();
+      
+      const sources = video?.querySelectorAll('source');
+      expect(sources).toBeTruthy();
+      expect(sources!.length).toBeGreaterThan(0);
+      
+      // Check that at least one source uses the clean command video
+      const cleanVideoSources = Array.from(sources!).filter(source => 
+        source.getAttribute('src')?.includes('demo-clean-command')
+      );
+      
+      expect(cleanVideoSources.length).toBeGreaterThan(0);
+    });
+
+    it('should not reference scan command video', () => {
+      const { container } = renderHeroSection();
+      const video = container.querySelector('video');
+      const sources = video?.querySelectorAll('source');
+      
+      // Verify no scan command video sources remain
+      const scanVideoSources = Array.from(sources!).filter(source => 
+        source.getAttribute('src')?.includes('demo-scan-command')
+      );
+      
+      expect(scanVideoSources.length).toBe(0);
+    });
+
+    it('should have correct MIME types for video sources', () => {
+      const { container } = renderHeroSection();
+      const video = container.querySelector('video');
+      const sources = video?.querySelectorAll('source');
+      
+      sources?.forEach(source => {
+        const type = source.getAttribute('type');
+        const src = source.getAttribute('src');
+        
+        if (src?.endsWith('.mov')) {
+          expect(type).toBe('video/quicktime');
+        }
+      });
+    });
+
+    it('should have autoplay, loop, and muted attributes', () => {
+      const { container } = renderHeroSection();
+      const video = container.querySelector('video');
+      
+      expect(video?.hasAttribute('autoplay')).toBe(true);
+      expect(video?.hasAttribute('loop')).toBe(true);
+      expect(video?.hasAttribute('muted') || video?.muted).toBe(true);
+      expect(video?.hasAttribute('playsinline')).toBe(true);
+    });
+  });
+
   describe('Property 4: Hero section has no shadows', () => {
     it('should render without box-shadow on container', () => {
       const { container } = renderHeroSection();

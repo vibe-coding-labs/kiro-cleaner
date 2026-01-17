@@ -1,0 +1,129 @@
+.ant-use-cases {
+  padding: 80px 24px;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.ant-use-cases-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ant-use-cases-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.ant-use-cases-overline {
+  color: #1890ff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.ant-use-cases-title {
+  font-weight: 800;
+  font-size: 40px;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 16px;
+}
+
+.ant-use-cases-subtitle {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.ant-use-cases-card {
+  height: 100%;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ant-use-cases-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--card-color);
+}
+
+.ant-use-cases-card:hover .ant-use-cases-card-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.ant-use-cases-card:hover .ant-use-cases-card-bg {
+  transform: scale(1.2);
+  opacity: 0.15;
+}
+
+.ant-use-cases-card .ant-card-body {
+  padding: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.ant-use-cases-card-bg {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: var(--card-color);
+  opacity: 0.05;
+  transition: all 0.5s ease;
+}
+
+.ant-use-cases-card-icon {
+  display: inline-flex;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: rgba(24, 144, 255, 0.08);
+  font-size: 40px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+
+.ant-use-cases-card-title {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 16px;
+}
+
+.ant-use-cases-card-scenario {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.ant-use-cases-card-solution {
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.ant-use-cases-card-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+@media (max-width: 768px) {
+  .ant-use-cases {
+    padding: 60px 16px;
+  }
+
+  .ant-use-cases-title {
+    font-size: 32px;
+  }
+}

@@ -113,15 +113,13 @@ const RealCases: React.FC = () => {
                   backgroundColor: colorTokens.background.paper,
                   border: `1px solid ${colorTokens.border.default}`,
                   borderRadius: '4px',
+                  boxShadow: 'none',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  // CSS containment for performance (Requirements 7.4)
+                  // CSS containment for performance
                   contain: 'layout style paint',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
                     borderColor: colorTokens.brand.primary,
-                    // will-change on hover (Requirements 7.4)
-                    willChange: 'transform, box-shadow',
                   },
                 }}
               >

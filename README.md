@@ -26,6 +26,10 @@ Kiro Cleaner 是一个专门用于清理Kiro AI对话应用冗余数据的工具
 
 ![Kiro Cleaner Scan Demo](data/demo-scan-command-final.gif)
 
+以下是在终端中运行 `kiro-cleaner clean` 命令的演示（3倍速）：
+
+![Kiro Cleaner Clean Demo](data/demo-clean-command-3x.gif)
+
 ### 安装
 
 #### 从源码构建

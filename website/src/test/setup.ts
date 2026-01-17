@@ -43,6 +43,43 @@ beforeAll(() => {
       return [0];
     }
   } as unknown as typeof IntersectionObserver;
+
+  // Mock ResizeObserver for Ant Design components
+  global.ResizeObserver = class ResizeObserver {
+    constructor(public callback: ResizeObserverCallback) {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver;
+
+  // Mock matchMedia for tests
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => true,
+    }),
+  });
+
+  // Mock CSS.supports for tests
+  if (typeof CSS === 'undefined') {
+    (global as any).CSS = {};
+  }
+  if (!CSS.supports) {
+    CSS.supports = (property: string, value?: string) => {
+      // Mock implementation - return true for backdrop-filter
+      if (property === 'backdrop-filter' || property === '-webkit-backdrop-filter') {
+        return true;
+      }
+      return false;
+    };
+  }
 });
 
 // Cleanup after each test

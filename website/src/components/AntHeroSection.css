@@ -1,0 +1,50 @@
+.hero-section {
+  background: #ffffff;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #e6f7ff;
+  border: 1px solid #91d5ff;
+  border-radius: 20px;
+  color: #1890ff;
+}
+
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
+  transition: all 0.2s ease;
+}
+
+.feature-tag:hover {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.video-container {
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: none;
+  transition: border-color 0.3s ease;
+}
+
+.video-container:hover {
+  border-color: #1890ff;
+}
+
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 36px !important;
+  }
+}

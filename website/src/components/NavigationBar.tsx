@@ -1,29 +1,19 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Box, Button, Container } from '@mui/material';
 import { GitHub } from '@mui/icons-material';
-import { colorTokens } from '../theme/tokens';
-import { effectTokens } from '../theme/tokens/effects';
-import { shadowTokens } from '../theme/tokens/shadows';
-import { getGlassmorphismStyles } from '../utils/featureDetection';
+import { flatColors } from '../theme/colors';
 
 const NavigationBar: React.FC = () => {
-  // Get glassmorphism styles with fallback for unsupported browsers
-  const glassStyles = getGlassmorphismStyles(
-    effectTokens.glass.light.background,
-    'rgba(255, 255, 255, 0.95)', // Fallback to solid background
-    '10px'
-  );
-
   return (
     <AppBar 
       position="sticky" 
       elevation={0}
       sx={{ 
-        // Glass effect with fallback (Requirements 6.3)
-        ...glassStyles,
-        borderBottom: effectTokens.glass.light.border,
-        // Subtle shadow (Requirements 6.3)
-        boxShadow: shadowTokens.elevation.sm,
+        // Flat design: solid background, no shadows or gradients
+        backgroundColor: flatColors.surface,
+        borderBottom: `1px solid ${flatColors.border}`,
+        boxShadow: 'none',
+        backgroundImage: 'none',
       }}
     >
       <Container maxWidth="lg">
@@ -33,19 +23,15 @@ const NavigationBar: React.FC = () => {
             component="div" 
             sx={{ 
               fontWeight: 800, 
-              color: colorTokens.text.primary,
+              color: flatColors.textPrimary,
               display: 'flex',
               alignItems: 'center',
               gap: 1.5,
               fontSize: '1.25rem',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              // Optimized hover effect (Requirements 3.1)
+              transition: 'color 0.2s ease',
               '&:hover': {
-                opacity: 0.8,
-                transform: 'translateY(-1px)',
-                // will-change on hover (Requirements 7.4)
-                willChange: 'transform, opacity',
+                color: flatColors.primary,
               },
             }}
           >
@@ -54,7 +40,7 @@ const NavigationBar: React.FC = () => {
                 width: 32,
                 height: 32,
                 borderRadius: '8px',
-                background: colorTokens.gradients.heroAlt,
+                backgroundColor: flatColors.primary,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -70,34 +56,16 @@ const NavigationBar: React.FC = () => {
             <Button 
               href="#features" 
               sx={{ 
-                color: colorTokens.text.primary,
+                color: flatColors.textPrimary,
                 fontWeight: 500,
                 px: 2,
-                minHeight: 44, // Touch target size (Requirements 7.3)
+                minHeight: 44,
                 textTransform: 'none',
                 fontSize: '0.9375rem',
-                transition: 'all 0.2s ease',
-                position: 'relative',
-                // Optimized hover effect (Requirements 3.1)
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 8,
-                  left: '50%',
-                  transform: 'translateX(-50%) scaleX(0)',
-                  width: '60%',
-                  height: '2px',
-                  background: colorTokens.brand.primary,
-                  transition: 'transform 0.2s ease',
-                  // will-change for underline animation (Requirements 7.4)
-                  willChange: 'transform',
-                },
+                transition: 'color 0.2s ease, background-color 0.2s ease',
                 '&:hover': {
-                  backgroundColor: 'transparent',
-                  color: colorTokens.brand.primary,
-                  '&::after': {
-                    transform: 'translateX(-50%) scaleX(1)',
-                  },
+                  backgroundColor: flatColors.primaryLight,
+                  color: flatColors.primary,
                 },
               }}
             >
@@ -106,33 +74,16 @@ const NavigationBar: React.FC = () => {
             <Button 
               href="#use-cases" 
               sx={{ 
-                color: colorTokens.text.primary,
+                color: flatColors.textPrimary,
                 fontWeight: 500,
                 px: 2,
-                minHeight: 44, // Touch target size (Requirements 7.3)
+                minHeight: 44,
                 textTransform: 'none',
                 fontSize: '0.9375rem',
-                transition: 'all 0.2s ease',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 8,
-                  left: '50%',
-                  transform: 'translateX(-50%) scaleX(0)',
-                  width: '60%',
-                  height: '2px',
-                  background: colorTokens.brand.primary,
-                  transition: 'transform 0.2s ease',
-                  // will-change for underline animation (Requirements 7.4)
-                  willChange: 'transform',
-                },
+                transition: 'color 0.2s ease, background-color 0.2s ease',
                 '&:hover': {
-                  backgroundColor: 'transparent',
-                  color: colorTokens.brand.primary,
-                  '&::after': {
-                    transform: 'translateX(-50%) scaleX(1)',
-                  },
+                  backgroundColor: flatColors.primaryLight,
+                  color: flatColors.primary,
                 },
               }}
             >
@@ -141,33 +92,16 @@ const NavigationBar: React.FC = () => {
             <Button 
               href="#faq" 
               sx={{ 
-                color: colorTokens.text.primary,
+                color: flatColors.textPrimary,
                 fontWeight: 500,
                 px: 2,
-                minHeight: 44, // Touch target size (Requirements 7.3)
+                minHeight: 44,
                 textTransform: 'none',
                 fontSize: '0.9375rem',
-                transition: 'all 0.2s ease',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 8,
-                  left: '50%',
-                  transform: 'translateX(-50%) scaleX(0)',
-                  width: '60%',
-                  height: '2px',
-                  background: colorTokens.brand.primary,
-                  transition: 'transform 0.2s ease',
-                  // will-change for underline animation (Requirements 7.4)
-                  willChange: 'transform',
-                },
+                transition: 'color 0.2s ease, background-color 0.2s ease',
                 '&:hover': {
-                  backgroundColor: 'transparent',
-                  color: colorTokens.brand.primary,
-                  '&::after': {
-                    transform: 'translateX(-50%) scaleX(1)',
-                  },
+                  backgroundColor: flatColors.primaryLight,
+                  color: flatColors.primary,
                 },
               }}
             >
@@ -178,19 +112,20 @@ const NavigationBar: React.FC = () => {
               startIcon={<GitHub />}
               variant="outlined"
               sx={{ 
-                color: colorTokens.text.primary,
-                borderColor: colorTokens.border.default,
+                color: flatColors.textPrimary,
+                borderColor: flatColors.border,
                 fontWeight: 500,
                 px: 2.5,
-                minHeight: 44, // Touch target size (Requirements 7.3)
+                minHeight: 44,
                 textTransform: 'none',
                 fontSize: '0.9375rem',
                 borderRadius: '8px',
                 ml: 1,
+                transition: 'all 0.2s ease',
                 '&:hover': {
-                  backgroundColor: colorTokens.text.primary,
-                  borderColor: colorTokens.text.primary,
-                  color: colorTokens.text.inverse,
+                  backgroundColor: flatColors.textPrimary,
+                  borderColor: flatColors.textPrimary,
+                  color: '#ffffff',
                 },
               }}
             >

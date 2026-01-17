@@ -5,6 +5,14 @@ import { effectTokens } from '../theme/tokens/effects';
 import { shadowTokens } from '../theme/tokens/shadows';
 
 const DemoVideo: React.FC = () => {
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  React.useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 3.0; // 3x speed
+    }
+  }, []);
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box
@@ -14,24 +22,21 @@ const DemoVideo: React.FC = () => {
           position: 'relative', 
           paddingTop: '56.25%', // 16:9 Aspect Ratio
           backgroundColor: colorTokens.neutral[900],
-          // Glass effect border (Requirements 2.3)
-          border: effectTokens.glass.light.border,
-          // Elevation shadow (Requirements 2.3)
-          boxShadow: shadowTokens.elevation['2xl'],
-          transition: 'all 0.3s ease',
-          // CSS containment for performance (Requirements 7.4)
+          // Flat design: border instead of shadow
+          border: `1px solid ${colorTokens.border.default}`,
+          boxShadow: 'none',
+          transition: 'border-color 0.3s ease',
+          // CSS containment for performance
           contain: 'layout style paint',
           '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: `${shadowTokens.elevation['2xl']}, ${shadowTokens.glow.sm}`,
-            // will-change on hover (Requirements 7.4)
-            willChange: 'transform, box-shadow',
+            borderColor: colorTokens.brand.primary,
           },
         }}
       >
         <Box
           component="video"
-          src="/demo-scan-command.mov"
+          ref={videoRef}
+          src="/assets/demo-clean-command.mov"
           autoPlay
           loop
           muted

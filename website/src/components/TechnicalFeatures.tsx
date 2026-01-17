@@ -111,10 +111,10 @@ const TechnicalFeatures: React.FC = () => {
                   backgroundColor: colorTokens.background.paper,
                   border: `1px solid ${colorTokens.border.default}`,
                   borderRadius: '4px',
+                  boxShadow: 'none',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: '0 12px 24px rgba(0,0,0,0.08)',
                     borderColor: colorTokens.brand.primary,
                   },
                 }}
