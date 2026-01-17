@@ -1,0 +1,54 @@
+/* Flat Design Global Styles */
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color: #2c3e50;
+  background-color: #ecf0f1;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force flat design - no shadows or gradients anywhere */
+* {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Prevent gradients globally */
+*::before,
+*::after {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Remove default button shadows and gradients */
+button,
+.MuiButton-root {
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Smooth transitions for flat design */
+a,
+button,
+.MuiButton-root,
+.MuiCard-root,
+.MuiPaper-root {
+  transition: background-color 250ms ease-in-out, 
+              color 250ms ease-in-out, 
+              border-color 250ms ease-in-out,
+              opacity 250ms ease-in-out,
+              transform 250ms ease-in-out;
+}

@@ -63,3 +63,43 @@ config.local.json
 # Temporary files
 tmp/
 temp/
+
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.vite/
+
+# Lock files (keep package-lock.json for reproducibility)
+# yarn.lock
+# pnpm-lock.yaml
+
+# Editor directories
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Kiro data
+test-kiro-data/cache/*
+test-kiro-data/logs/*
+test-kiro-data/temp/*
+test-kiro-data/conversations.db-shm/
+test-kiro-data/conversations.db-wal/
+!test-kiro-data/cache/.gitkeep
+!test-kiro-data/logs/.gitkeep
+!test-kiro-data/temp/.gitkeep

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Broom icon -->
+  <path d="M60,20 L70,10 L75,15 L65,25 L75,35 L70,40 L60,30 L50,40 L30,20 Z" fill="#1976D2"/>
+  <!-- Dustpan icon -->
+  <path d="M30,50 L50,70 L70,50 L65,45 L50,60 L35,45 Z" fill="#E57373"/>
+  <!-- Text -->
+  <text x="50" y="90" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#333">Kiro Cleaner</text>
+</svg>
