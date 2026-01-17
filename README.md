@@ -2,6 +2,8 @@
 
 Kiro Cleaner 是一个专门用于清理Kiro AI对话应用冗余数据的工具。它可以帮助用户安全地清理对话历史、缓存文件、日志文件等冗余数据，同时提供完整的备份和恢复功能。
 
+🌐 **官方网站**: [https://vibe-coding-labs.github.io/kiro-cleaner/](https://vibe-coding-labs.github.io/kiro-cleaner/)
+
 ## ✨ 特性
 
 - 🔍 **智能扫描**: 自动发现Kiro数据存储位置并分析存储使用情况
