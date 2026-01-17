@@ -90,11 +90,9 @@ const AntHeroSection: React.FC = () => {
           {/* Right Content - Demo Video */}
           <Col xs={24} md={12}>
             <div className="video-container">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
+              <img
+                src={`${import.meta.env.BASE_URL}assets/demo-clean-command-3x.gif`}
+                alt="Kiro Cleaner Demo"
                 style={{
                   width: '100%',
                   height: 'auto',
@@ -102,11 +100,7 @@ const AntHeroSection: React.FC = () => {
                   borderRadius: 8,
                   backgroundColor: '#000',
                 }}
-                key={`${import.meta.env.BASE_URL}assets/demo-clean-command.mov`}
-              >
-                <source src={`${import.meta.env.BASE_URL}assets/demo-clean-command.mov`} type="video/mp4" />
-                您的浏览器不支持视频播放
-              </video>
+              />
             </div>
           </Col>
         </Row>

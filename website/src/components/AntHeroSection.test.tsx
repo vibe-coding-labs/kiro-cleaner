@@ -28,21 +28,17 @@ describe('AntHeroSection Component', () => {
     expect(screen.getAllByText(/自动备份/i).length).toBeGreaterThan(0);
   });
 
-  it('should render video element with correct attributes', () => {
+  it('should render demo image with correct attributes', () => {
     const { container } = render(<AntHeroSection />);
-    const video = container.querySelector('video');
-    expect(video).toBeInTheDocument();
-    expect(video).toHaveAttribute('autoPlay');
-    expect(video).toHaveAttribute('loop');
-    expect(video).toHaveAttribute('playsInline');
-    // In test environment, muted might not be set as an attribute but as a property
-    // Just verify the video element exists with the key attributes
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('alt', 'Kiro Cleaner Demo');
   });
 
-  it('should have correct video source', () => {
+  it('should have correct demo image source', () => {
     const { container } = render(<AntHeroSection />);
-    const source = container.querySelector('source');
+    const img = container.querySelector('img');
     // In test environment, BASE_URL defaults to '/'
-    expect(source?.getAttribute('src')).toContain('assets/demo-clean-command.mov');
+    expect(img?.getAttribute('src')).toContain('assets/demo-clean-command-3x.gif');
   });
 });
