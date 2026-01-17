@@ -102,9 +102,9 @@ const AntHeroSection: React.FC = () => {
                   borderRadius: 8,
                   backgroundColor: '#000',
                 }}
-                key="/assets/demo-clean-command.mov"
+                key={`${import.meta.env.BASE_URL}assets/demo-clean-command.mov`}
               >
-                <source src="/assets/demo-clean-command.mov" type="video/mp4" />
+                <source src={`${import.meta.env.BASE_URL}assets/demo-clean-command.mov`} type="video/mp4" />
                 您的浏览器不支持视频播放
               </video>
             </div>

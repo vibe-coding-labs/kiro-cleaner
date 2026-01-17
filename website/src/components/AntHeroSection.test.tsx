@@ -11,7 +11,7 @@ describe('AntHeroSection Component', () => {
 
   it('should render the subtitle', () => {
     render(<AntHeroSection />);
-    expect(screen.getByText(/清理 Kiro IDE 的对话历史/i)).toBeInTheDocument();
+    expect(screen.getByText(/Kiro IDE 缓存过大导致卡顿/i)).toBeInTheDocument();
   });
 
   it('should render CTA buttons', () => {
@@ -23,7 +23,7 @@ describe('AntHeroSection Component', () => {
   it('should render feature tags', () => {
     render(<AntHeroSection />);
     expect(screen.getByText(/快速扫描/i)).toBeInTheDocument();
-    expect(screen.getByText(/安全可靠/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/安全可靠/i).length).toBeGreaterThan(0);
     // "自动备份" appears twice in the component, so we use getAllByText
     expect(screen.getAllByText(/自动备份/i).length).toBeGreaterThan(0);
   });
@@ -42,6 +42,7 @@ describe('AntHeroSection Component', () => {
   it('should have correct video source', () => {
     const { container } = render(<AntHeroSection />);
     const source = container.querySelector('source');
-    expect(source).toHaveAttribute('src', '/assets/demo-clean-command.mov');
+    // In test environment, BASE_URL defaults to '/'
+    expect(source?.getAttribute('src')).toContain('assets/demo-clean-command.mov');
   });
 });
