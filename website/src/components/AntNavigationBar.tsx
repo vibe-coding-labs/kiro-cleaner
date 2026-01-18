@@ -2,25 +2,28 @@ import React, { useState } from 'react';
 import { Layout, Menu, Button, Drawer } from 'antd';
 import { GithubOutlined, MenuOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 import './AntNavigationBar.css';
 
 const { Header } = Layout;
 
 const AntNavigationBar: React.FC = () => {
+  const { t } = useTranslation();
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const menuItems: MenuProps['items'] = [
     {
       key: 'features',
-      label: <a href="#features">特性</a>,
+      label: <a href="#features">{t('nav.features')}</a>,
     },
     {
       key: 'use-cases',
-      label: <a href="#use-cases">场景</a>,
+      label: <a href="#use-cases">{t('nav.useCases')}</a>,
     },
     {
       key: 'faq',
-      label: <a href="#faq">FAQ</a>,
+      label: <a href="#faq">{t('nav.faq')}</a>,
     },
   ];
 
@@ -42,19 +45,22 @@ const AntNavigationBar: React.FC = () => {
 
         <div className="ant-navbar-desktop">
           <div className="ant-navbar-links">
-            <a href="#features" className="ant-navbar-link">特性</a>
-            <a href="#use-cases" className="ant-navbar-link">场景</a>
-            <a href="#faq" className="ant-navbar-link">FAQ</a>
+            <a href="#features" className="ant-navbar-link">{t('nav.features')}</a>
+            <a href="#use-cases" className="ant-navbar-link">{t('nav.useCases')}</a>
+            <a href="#faq" className="ant-navbar-link">{t('nav.faq')}</a>
           </div>
-          <Button
-            type="default"
-            icon={<GithubOutlined />}
-            href="https://github.com/vibe-coding-labs/kiro-cleaner"
-            target="_blank"
-            className="ant-navbar-github-btn"
-          >
-            GitHub
-          </Button>
+          <div className="ant-navbar-actions">
+            <LanguageSwitcher />
+            <Button
+              type="default"
+              icon={<GithubOutlined />}
+              href="https://github.com/vibe-coding-labs/kiro-cleaner"
+              target="_blank"
+              className="ant-navbar-github-btn"
+            >
+              {t('nav.github')}
+            </Button>
+          </div>
         </div>
 
         <Button
@@ -65,7 +71,7 @@ const AntNavigationBar: React.FC = () => {
         />
 
         <Drawer
-          title="菜单"
+          title={t('nav.menu')}
           placement="right"
           onClose={closeDrawer}
           open={drawerVisible}
@@ -76,16 +82,18 @@ const AntNavigationBar: React.FC = () => {
             items={menuItems}
             onClick={closeDrawer}
           />
-          <Button
-            type="default"
-            icon={<GithubOutlined />}
-            href="https://github.com/vibe-coding-labs/kiro-cleaner"
-            target="_blank"
-            block
-            style={{ marginTop: '16px' }}
-          >
-            GitHub
-          </Button>
+          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <LanguageSwitcher />
+            <Button
+              type="default"
+              icon={<GithubOutlined />}
+              href="https://github.com/vibe-coding-labs/kiro-cleaner"
+              target="_blank"
+              block
+            >
+              {t('nav.github')}
+            </Button>
+          </div>
         </Drawer>
       </div>
     </Header>

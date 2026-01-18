@@ -3,51 +3,54 @@ import { Steps, Card, Typography } from 'antd';
 import { SearchOutlined, FileSearchOutlined, DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useTranslation } from 'react-i18next';
 import './AntHowItWorks.css';
 
 const { Title, Paragraph, Text } = Typography;
 
 const AntHowItWorks: React.FC = () => {
+  const { t } = useTranslation();
+
   const steps = [
     {
       icon: <SearchOutlined />,
-      title: '扫描',
-      description: '检测 Kiro IDE 数据存储位置，分析数据库、缓存和日志文件',
+      title: t('howItWorks.step1Title'),
+      description: t('howItWorks.step1Desc'),
       details: [
-        '扫描对话历史数据库',
-        '检测缓存文件',
-        '分析临时文件',
-        '识别可清理的数据'
+        t('howItWorks.step1Item1'),
+        t('howItWorks.step1Item2'),
+        t('howItWorks.step1Item3'),
+        t('howItWorks.step1Item4')
       ],
     },
     {
       icon: <FileSearchOutlined />,
-      title: '预览',
-      description: '生成清理报告，显示哪些数据会被清理',
+      title: t('howItWorks.step2Title'),
+      description: t('howItWorks.step2Desc'),
       details: [
-        '显示可清理数据类型',
-        '预估释放空间大小',
-        '提供清理建议'
+        t('howItWorks.step2Item1'),
+        t('howItWorks.step2Item2'),
+        t('howItWorks.step2Item3')
       ],
     },
     {
       icon: <DeleteOutlined />,
-      title: '清理',
-      description: '自动创建备份后执行清理',
+      title: t('howItWorks.step3Title'),
+      description: t('howItWorks.step3Desc'),
       details: [
-        '清理前自动备份',
-        '支持压缩',
-        '保留重要数据'
+        t('howItWorks.step3Item1'),
+        t('howItWorks.step3Item2'),
+        t('howItWorks.step3Item3')
       ],
     },
     {
       icon: <CheckCircleOutlined />,
-      title: '完成',
-      description: '清理完成后生成对比报告',
+      title: t('howItWorks.step4Title'),
+      description: t('howItWorks.step4Desc'),
       details: [
-        '清理前后对比',
-        '空间释放统计',
-        '支持快速恢复'
+        t('howItWorks.step4Item1'),
+        t('howItWorks.step4Item2'),
+        t('howItWorks.step4Item3')
       ],
     },
   ];
@@ -57,12 +60,12 @@ const AntHowItWorks: React.FC = () => {
       <div className="ant-how-it-works-container">
         {/* Section Header */}
         <div className="ant-how-it-works-header">
-          <Text className="ant-how-it-works-overline">工作原理</Text>
+          <Text className="ant-how-it-works-overline">{t('howItWorks.overline')}</Text>
           <Title level={2} className="ant-how-it-works-title">
-            使用流程
+            {t('howItWorks.title')}
           </Title>
           <Paragraph className="ant-how-it-works-subtitle">
-            简单的清理流程
+            {t('howItWorks.subtitle')}
           </Paragraph>
         </div>
 
@@ -118,7 +121,7 @@ const AntHowItWorks: React.FC = () => {
         {/* Command Example */}
         <Card className="ant-how-it-works-command" bordered={true}>
           <Title level={5} className="ant-how-it-works-command-title">
-            💻 快速开始
+            {t('howItWorks.quickStartTitle')}
           </Title>
           <SyntaxHighlighter
             language="bash"
@@ -137,13 +140,13 @@ const AntHowItWorks: React.FC = () => {
               }
             }}
           >
-{`# 扫描 Kiro 数据
+{`${t('howItWorks.quickStartComment1')}
 ./kiro-cleaner scan
 
-# 预览清理操作（不会实际删除）
+${t('howItWorks.quickStartComment2')}
 ./kiro-cleaner clean --dry-run
 
-# 执行清理（自动备份）
+${t('howItWorks.quickStartComment3')}
 ./kiro-cleaner clean --backup`}
           </SyntaxHighlighter>
         </Card>

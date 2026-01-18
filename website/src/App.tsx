@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { ConfigProvider } from 'antd';
+import { useTranslation } from 'react-i18next';
 import AntNavigationBar from './components/AntNavigationBar';
 import AntHeroSection from './components/AntHeroSection';
 import AntFeatures from './components/AntFeatures';
@@ -10,6 +12,12 @@ import 'antd/dist/reset.css';
 import './App.css';
 
 function App() {
+  const { i18n, t } = useTranslation();
+
+  // Update HTML lang attribute when language changes
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
   // Ant Design theme configuration
   const antdTheme = {
     token: {
@@ -51,9 +59,9 @@ function App() {
         <section id="features" className="section-features">
           <div className="section-container">
             <div className="section-header">
-              <h2 className="section-title">强大特性</h2>
+              <h2 className="section-title">{t('features.title')}</h2>
               <p className="section-subtitle">
-                专为 Kiro IDE 用户打造的数据清理工具
+                {t('features.subtitle')}
               </p>
             </div>
             <AntFeatures />
@@ -70,9 +78,9 @@ function App() {
         <section id="installation" className="section-installation">
           <div className="section-container">
             <div className="section-header">
-              <h2 className="section-title">快速开始</h2>
+              <h2 className="section-title">{t('installation.title')}</h2>
               <p className="section-subtitle">
-                选择适合你的安装方式，几分钟即可开始使用
+                {t('installation.subtitle')}
               </p>
             </div>
             <AntInstallation />
@@ -87,11 +95,11 @@ function App() {
           <div className="footer-container">
             <div className="footer-content">
               <div className="footer-brand">
-                <h3 className="footer-title">🧹 Kiro Cleaner</h3>
-                <p className="footer-description">让你的 Kiro IDE 轻装上阵</p>
+                <h3 className="footer-title">{t('footer.title')}</h3>
+                <p className="footer-description">{t('footer.subtitle')}</p>
               </div>
               <div className="footer-copyright">
-                <p>© {new Date().getFullYear()} Kiro Cleaner. MIT License.</p>
+                <p>{t('footer.copyright')}</p>
               </div>
             </div>
           </div>

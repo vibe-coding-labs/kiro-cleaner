@@ -1,47 +1,50 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import './AntInstallation.css';
 
 const AntInstallation: React.FC = () => {
+  const { t } = useTranslation();
+
   const installationMethods = [
     {
-      label: "从源码构建",
+      label: t('installation.tab1'),
       language: "bash",
-      command: `# 克隆仓库
+      command: `${t('installation.buildComment1')}
 git clone https://github.com/vibe-coding-labs/kiro-cleaner.git
 cd kiro-cleaner
 
-# 构建
+${t('installation.buildComment2')}
 make build-local
 
-# 安装到系统（可选）
+${t('installation.buildComment3')}
 sudo make install`
     },
     {
-      label: "使用预编译版本",
+      label: t('installation.tab2'),
       language: "bash",
-      command: `# 从 Releases 页面下载适合您操作系统的预编译二进制文件
-# https://github.com/vibe-coding-labs/kiro-cleaner/releases
+      command: `${t('installation.precompiledComment1')}
+${t('installation.precompiledComment2')}
 
-# 或者使用 Homebrew (如果可用)
+${t('installation.precompiledComment3')}
 brew install kiro-cleaner`
     },
     {
-      label: "使用方法",
+      label: t('installation.tab3'),
       language: "bash",
-      command: `# 扫描 Kiro 数据存储
+      command: `${t('installation.usageComment1')}
 ./kiro-cleaner scan
 
-# 预览清理操作
+${t('installation.usageComment2')}
 ./kiro-cleaner clean --dry-run
 
-# 执行清理（带备份）
+${t('installation.usageComment3')}
 ./kiro-cleaner clean --backup
 
-# 管理备份
+${t('installation.usageComment4')}
 ./kiro-cleaner backup list
 ./kiro-cleaner backup restore <backup-id>`
     }

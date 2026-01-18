@@ -2,95 +2,95 @@
 
 ## Task List
 
-- [ ] 1. Setup i18n Infrastructure
-  - [ ] 1.1 Install i18n dependencies (i18next, react-i18next, i18next-browser-languagedetector)
-  - [ ] 1.2 Create i18n configuration file (`src/i18n/config.ts`)
-  - [ ] 1.3 Create translation file structure (`src/i18n/locales/`)
-  - [ ] 1.4 Initialize i18n in main application entry point
-  - [ ] 1.5 Update HTML lang attribute dynamically
+- [x] 1. Setup i18n Infrastructure
+  - [x] 1.1 Install i18n dependencies (i18next, react-i18next, i18next-browser-languagedetector)
+  - [x] 1.2 Create i18n configuration file (`src/i18n/config.ts`)
+  - [x] 1.3 Create translation file structure (`src/i18n/locales/`)
+  - [x] 1.4 Initialize i18n in main application entry point
+  - [x] 1.5 Update HTML lang attribute dynamically
 
-- [ ] 2. Create Translation Files
-  - [ ] 2.1 Create English translation file (`src/i18n/locales/en.json`)
-  - [ ] 2.2 Create Simplified Chinese translation file (`src/i18n/locales/zh-CN.json`)
-  - [ ] 2.3 Define translation key structure and naming convention
-  - [ ] 2.4 Extract all translatable text from components
-  - [ ] 2.5 Organize translations by sections (nav, hero, features, useCases, faq, installation)
+- [x] 2. Create Translation Files
+  - [x] 2.1 Create English translation file (`src/i18n/locales/en.json`)
+  - [x] 2.2 Create Simplified Chinese translation file (`src/i18n/locales/zh-CN.json`)
+  - [x] 2.3 Define translation key structure and naming convention
+  - [x] 2.4 Extract all translatable text from components
+  - [x] 2.5 Organize translations by sections (nav, hero, features, useCases, faq, installation)
 
-- [ ] 3. Implement Language Switcher Component
-  - [ ] 3.1 Create LanguageSwitcher component (`src/components/LanguageSwitcher.tsx`)
-  - [ ] 3.2 Add language dropdown with English and 简体中文 options
-  - [ ] 3.3 Implement language change handler
-  - [ ] 3.4 Style language switcher to match design
-  - [ ] 3.5 Add language switcher to navigation bar
-  - [ ] 3.6 Add ARIA labels and keyboard accessibility
+- [x] 3. Implement Language Switcher Component
+  - [x] 3.1 Create LanguageSwitcher component (`src/components/LanguageSwitcher.tsx`)
+  - [x] 3.2 Add language dropdown with English and 简体中文 options
+  - [x] 3.3 Implement language change handler
+  - [x] 3.4 Style language switcher to match design
+  - [x] 3.5 Add language switcher to navigation bar
+  - [x] 3.6 Add ARIA labels and keyboard accessibility
 
-- [ ] 4. Update Navigation Component
-  - [ ] 4.1 Replace hardcoded navigation text with translation keys
-  - [ ] 4.2 Update AntNavigationBar component to use useTranslation hook
-  - [ ] 4.3 Test navigation in both languages
-  - [ ] 4.4 Verify responsive behavior with different text lengths
+- [x] 4. Update Navigation Component
+  - [x] 4.1 Replace hardcoded navigation text with translation keys
+  - [x] 4.2 Update AntNavigationBar component to use useTranslation hook
+  - [x] 4.3 Test navigation in both languages
+  - [x] 4.4 Verify responsive behavior with different text lengths
 
-- [ ] 5. Update Hero Section Component
-  - [ ] 5.1 Replace hardcoded hero text with translation keys
-  - [ ] 5.2 Update AntHeroSection component to use useTranslation hook
-  - [ ] 5.3 Translate badge, titles, subtitle, benefits, and CTA buttons
-  - [ ] 5.4 Test layout with both languages
-  - [ ] 5.5 Verify no text overflow or layout breaks
+- [x] 5. Update Hero Section Component
+  - [x] 5.1 Replace hardcoded hero text with translation keys
+  - [x] 5.2 Update AntHeroSection component to use useTranslation hook
+  - [x] 5.3 Translate badge, titles, subtitle, benefits, and CTA buttons
+  - [x] 5.4 Test layout with both languages
+  - [x] 5.5 Verify no text overflow or layout breaks
 
-- [ ] 6. Update Features Section Component
-  - [ ] 6.1 Replace hardcoded features text with translation keys
-  - [ ] 6.2 Update AntFeatures component to use useTranslation hook
-  - [ ] 6.3 Translate section title, subtitle, and all feature cards
-  - [ ] 6.4 Test card layouts with different text lengths
-  - [ ] 6.5 Verify icons and styling remain consistent
+- [x] 6. Update Features Section Component
+  - [x] 6.1 Replace hardcoded features text with translation keys
+  - [x] 6.2 Update AntFeatures component to use useTranslation hook
+  - [x] 6.3 Translate section title, subtitle, and all feature cards
+  - [x] 6.4 Test card layouts with different text lengths
+  - [x] 6.5 Verify icons and styling remain consistent
 
-- [ ] 7. Update How It Works Section Component
-  - [ ] 7.1 Replace hardcoded workflow text with translation keys
-  - [ ] 7.2 Update AntHowItWorks component to use useTranslation hook
-  - [ ] 7.3 Translate section title, steps, and code examples
-  - [ ] 7.4 Test step cards in both languages
-  - [ ] 7.5 Verify timeline visualization works correctly
+- [x] 7. Update How It Works Section Component
+  - [x] 7.1 Replace hardcoded workflow text with translation keys
+  - [x] 7.2 Update AntHowItWorks component to use useTranslation hook
+  - [x] 7.3 Translate section title, steps, and code examples
+  - [x] 7.4 Test step cards in both languages
+  - [x] 7.5 Verify timeline visualization works correctly
 
-- [ ] 8. Update Use Cases Section Component
-  - [ ] 8.1 Replace hardcoded use case text with translation keys
-  - [ ] 8.2 Update AntUseCases component to use useTranslation hook
-  - [ ] 8.3 Translate section title, subtitle, and all use case cards
-  - [ ] 8.4 Test card layouts and badges in both languages
-  - [ ] 8.5 Verify color schemes and icons remain consistent
+- [x] 8. Update Use Cases Section Component
+  - [x] 8.1 Replace hardcoded use case text with translation keys
+  - [x] 8.2 Update AntUseCases component to use useTranslation hook
+  - [x] 8.3 Translate section title, subtitle, and all use case cards
+  - [x] 8.4 Test card layouts and badges in both languages
+  - [x] 8.5 Verify color schemes and icons remain consistent
 
-- [ ] 9. Update Installation Section Component
-  - [ ] 9.1 Replace hardcoded installation text with translation keys
-  - [ ] 9.2 Update AntInstallation component to use useTranslation hook
-  - [ ] 9.3 Translate tab labels and installation instructions
-  - [ ] 9.4 Keep code blocks in original language (bash commands)
-  - [ ] 9.5 Test tab switching in both languages
+- [x] 9. Update Installation Section Component
+  - [x] 9.1 Replace hardcoded installation text with translation keys
+  - [x] 9.2 Update AntInstallation component to use useTranslation hook
+  - [x] 9.3 Translate tab labels and installation instructions
+  - [x] 9.4 Keep code blocks in original language (bash commands)
+  - [x] 9.5 Test tab switching in both languages
 
-- [ ] 10. Update FAQ Section Component
-  - [ ] 10.1 Replace hardcoded FAQ text with translation keys
-  - [ ] 10.2 Update AntFAQ component to use useTranslation hook
-  - [ ] 10.3 Translate section title, subtitle, questions, and answers
-  - [ ] 10.4 Test accordion expansion in both languages
-  - [ ] 10.5 Verify contact links and text
+- [x] 10. Update FAQ Section Component
+  - [x] 10.1 Replace hardcoded FAQ text with translation keys
+  - [x] 10.2 Update AntFAQ component to use useTranslation hook
+  - [x] 10.3 Translate section title, subtitle, questions, and answers
+  - [x] 10.4 Test accordion expansion in both languages
+  - [x] 10.5 Verify contact links and text
 
-- [ ] 11. Implement Language Detection
-  - [ ] 11.1 Configure i18next-browser-languagedetector
-  - [ ] 11.2 Set detection order (localStorage → navigator → default)
-  - [ ] 11.3 Test browser language detection for Chinese browsers
-  - [ ] 11.4 Test browser language detection for English browsers
-  - [ ] 11.5 Verify fallback to English for unsupported languages
+- [x] 11. Implement Language Detection
+  - [x] 11.1 Configure i18next-browser-languagedetector
+  - [x] 11.2 Set detection order (localStorage → navigator → default)
+  - [x] 11.3 Test browser language detection for Chinese browsers
+  - [x] 11.4 Test browser language detection for English browsers
+  - [x] 11.5 Verify fallback to English for unsupported languages
 
-- [ ] 12. Implement Language Persistence
-  - [ ] 12.1 Configure localStorage caching in i18next
-  - [ ] 12.2 Set localStorage key name ('kiro-cleaner-language')
-  - [ ] 12.3 Test language preference is saved on switch
-  - [ ] 12.4 Test saved preference is loaded on page reload
-  - [ ] 12.5 Test clearing localStorage resets to auto-detection
+- [x] 12. Implement Language Persistence
+  - [x] 12.1 Configure localStorage caching in i18next
+  - [x] 12.2 Set localStorage key name ('kiro-cleaner-language')
+  - [x] 12.3 Test language preference is saved on switch
+  - [x] 12.4 Test saved preference is loaded on page reload
+  - [x] 12.5 Test clearing localStorage resets to auto-detection
 
-- [ ] 13. Update HTML Metadata
-  - [ ] 13.1 Update HTML lang attribute on language change
-  - [ ] 13.2 Add language-specific meta tags if needed
-  - [ ] 13.3 Test meta tags in both languages
-  - [ ] 13.4 Verify SEO implications
+- [x] 13. Update HTML Metadata
+  - [x] 13.1 Update HTML lang attribute on language change
+  - [x] 13.2 Add language-specific meta tags if needed
+  - [x] 13.3 Test meta tags in both languages
+  - [x] 13.4 Verify SEO implications
 
 - [ ] 14. Write Unit Tests
   - [ ] 14.1 Write tests for LanguageSwitcher component

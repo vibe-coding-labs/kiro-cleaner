@@ -1,34 +1,37 @@
 import React from 'react';
 import { Row, Col, Card, Typography } from 'antd';
 import { ScanOutlined, SafetyOutlined, CloudSyncOutlined, FileTextOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import './AntFeatures.css';
 
 const { Title, Paragraph } = Typography;
 
 const AntFeatures: React.FC = () => {
+  const { t } = useTranslation();
+
   const features = [
     {
       icon: <ScanOutlined />,
-      title: '智能扫描',
-      description: '自动发现 Kiro 数据存储位置，分析数据库、缓存和日志文件',
+      title: t('features.smartScan'),
+      description: t('features.smartScanDesc'),
       color: '#1890ff',
     },
     {
       icon: <SafetyOutlined />,
-      title: '安全清理',
-      description: '基于规则的清理引擎，只删除缓存和临时文件',
+      title: t('features.safeClean'),
+      description: t('features.safeCleanDesc'),
       color: '#52c41a',
     },
     {
       icon: <CloudSyncOutlined />,
-      title: '自动备份',
-      description: '清理前自动创建备份，支持压缩',
+      title: t('features.autoBackup'),
+      description: t('features.autoBackupDesc'),
       color: '#faad14',
     },
     {
       icon: <FileTextOutlined />,
-      title: '详细报告',
-      description: '显示清理前后的空间对比和文件统计',
+      title: t('features.detailedReport'),
+      description: t('features.detailedReportDesc'),
       color: '#13c2c2',
     },
   ];

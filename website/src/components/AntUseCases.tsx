@@ -1,42 +1,45 @@
 import React from 'react';
 import { Card, Typography, Row, Col } from 'antd';
 import { DatabaseOutlined, ThunderboltOutlined, CodeOutlined, RiseOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import './AntUseCases.css';
 
 const { Title, Paragraph, Text } = Typography;
 
 const AntUseCases: React.FC = () => {
+  const { t } = useTranslation();
+
   const useCases = [
     {
       icon: <ThunderboltOutlined />,
-      title: 'IDE 运行缓慢',
-      scenario: '当 Kiro IDE 响应变慢、卡顿严重',
-      solution: '本地缓存过大是主要原因！清理冗余数据后，IDE 立即起飞，响应速度显著提升。',
-      stats: '性能提升明显',
+      title: t('useCases.case1Title'),
+      scenario: t('useCases.case1Scenario'),
+      solution: t('useCases.case1Solution'),
+      stats: t('useCases.case1Badge'),
       color: '#52c41a',
     },
     {
       icon: <DatabaseOutlined />,
-      title: '存储空间不足',
-      scenario: '当你的磁盘空间告急',
-      solution: 'Kiro Cleaner 可以清理对话历史、缓存和临时文件，释放大量存储空间。',
-      stats: '释放存储空间',
+      title: t('useCases.case2Title'),
+      scenario: t('useCases.case2Scenario'),
+      solution: t('useCases.case2Solution'),
+      stats: t('useCases.case2Badge'),
       color: '#1890ff',
     },
     {
       icon: <CodeOutlined />,
-      title: '项目切换频繁',
-      scenario: '当你在多个项目间切换',
-      solution: '定期清理可以避免项目数据混乱，保持 IDE 运行流畅。',
-      stats: '支持批量清理',
+      title: t('useCases.case3Title'),
+      scenario: t('useCases.case3Scenario'),
+      solution: t('useCases.case3Solution'),
+      stats: t('useCases.case3Badge'),
       color: '#722ed1',
     },
     {
       icon: <RiseOutlined />,
-      title: '长期使用维护',
-      scenario: '当你长期使用 Kiro IDE',
-      solution: '定期维护可以防止数据累积，避免性能下降。',
-      stats: '建议定期清理',
+      title: t('useCases.case4Title'),
+      scenario: t('useCases.case4Scenario'),
+      solution: t('useCases.case4Solution'),
+      stats: t('useCases.case4Badge'),
       color: '#faad14',
     },
   ];
@@ -46,12 +49,12 @@ const AntUseCases: React.FC = () => {
       <div className="ant-use-cases-container">
         {/* Section Header */}
         <div className="ant-use-cases-header">
-          <Text className="ant-use-cases-overline">使用场景</Text>
+          <Text className="ant-use-cases-overline">{t('useCases.overline')}</Text>
           <Title level={2} className="ant-use-cases-title">
-            什么时候需要 Kiro Cleaner？
+            {t('useCases.title')}
           </Title>
           <Paragraph className="ant-use-cases-subtitle">
-            Kiro Cleaner 适用的场景
+            {t('useCases.subtitle')}
           </Paragraph>
         </div>
 
@@ -77,7 +80,7 @@ const AntUseCases: React.FC = () => {
                 </Title>
 
                 <Paragraph className="ant-use-cases-card-scenario">
-                  📌 {useCase.scenario}
+                  {useCase.scenario}
                 </Paragraph>
 
                 <Paragraph className="ant-use-cases-card-solution">
@@ -90,7 +93,7 @@ const AntUseCases: React.FC = () => {
                   color: useCase.color,
                 }}>
                   <Text style={{ color: useCase.color, fontWeight: 700 }}>
-                    ✨ {useCase.stats}
+                    {useCase.stats}
                   </Text>
                 </div>
               </Card>

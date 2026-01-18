@@ -56,6 +56,12 @@
   gap: 16px;
 }
 
+.ant-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .ant-navbar-links {
   display: flex;
   align-items: center;

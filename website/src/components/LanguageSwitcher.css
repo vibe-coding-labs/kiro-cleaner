@@ -1,0 +1,26 @@
+.language-switcher-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.language-switcher-button:hover {
+  background-color: rgba(24, 144, 255, 0.1);
+  border-color: #1890ff;
+}
+
+.language-switcher-button .anticon {
+  font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .language-switcher-button {
+    padding: 0 8px;
+    font-size: 14px;
+  }
+}

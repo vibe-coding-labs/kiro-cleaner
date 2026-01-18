@@ -2,20 +2,47 @@
 
 [简体中文](README.zh-CN.md) | English
 
-Kiro Cleaner is a specialized tool designed to clean up redundant data from Kiro AI conversation applications. It helps users safely clean conversation history, cache files, log files, and other redundant data while providing complete backup and recovery functionality.
+## 🚀 Is Kiro IDE Lagging? Clean It Up and Speed It Up Instantly!
+
+**When conversation history files accumulate, Kiro IDE becomes noticeably slower and laggy.** Kiro Cleaner is a specialized tool designed to solve this problem by safely cleaning up redundant conversation data, cache files, and logs, making your Kiro IDE fly again!
+
+### 💡 Why You Need Kiro Cleaner
+
+- **🐌 Problem**: As you use Kiro IDE, conversation history accumulates in the database, causing the IDE to slow down, lag, and even freeze
+- **⚡ Solution**: Kiro Cleaner intelligently cleans redundant data, **instantly restoring IDE responsiveness and significantly improving performance**
+- **🛡️ Safety**: Automatic backup before cleanup, restore anytime - never worry about data loss
 
 🌐 **Official Website**: [https://vibe-coding-labs.github.io/kiro-cleaner/](https://vibe-coding-labs.github.io/kiro-cleaner/)
 
 ## ✨ Features
 
 - 🔍 **Smart Scanning**: Automatically discovers Kiro data storage locations and analyzes storage usage
-- 🧹 **Safe Cleanup**: Rule-based intelligent cleanup ensuring data safety
-- � **Auto Backup**: Automatically creates backups before cleanup with compression and incremental backup support
+- 🧹 **Safe Cleanup**: Rule-based intelligent cleanup ensuring data safety, **solves IDE lag issues**
+- 💾 **Auto Backup**: Automatically creates backups before cleanup with compression and incremental backup support
 - ⚙️ **Flexible Configuration**: Supports custom cleanup rules and strategies
 - 📊 **Detailed Reports**: Provides before/after comparison and space savings statistics
-- � **Rollback Support**: Supports cleanup operation rollback
+- 🔄 **Rollback Support**: Supports cleanup operation rollback
 - 🎨 **Beautiful Interface**: Colorful output and progress display
 - 🚀 **Cross-Platform**: Supports macOS, Windows, and Linux
+
+## 🎯 When Do You Need Kiro Cleaner?
+
+### 1. 🐌 IDE Running Slow
+**Symptom**: Kiro IDE responds slowly, lags severely, or even freezes  
+**Cause**: Large local cache and conversation history are the main culprits!  
+**Solution**: After cleaning redundant data with Kiro Cleaner, **IDE takes off immediately with significantly improved response speed**
+
+### 2. 💾 Insufficient Storage
+**Symptom**: Your disk space is running low  
+**Solution**: Kiro Cleaner can clean conversation history, cache, and temporary files to **free up large amounts of storage space**
+
+### 3. 🔄 Frequent Project Switching
+**Symptom**: You switch between multiple projects  
+**Solution**: Regular cleanup can **avoid project data confusion and keep IDE running smoothly**
+
+### 4. 🛠️ Long-term Use Maintenance
+**Symptom**: You use Kiro IDE for a long time  
+**Solution**: Regular maintenance can **prevent data accumulation and avoid performance degradation**
 
 ## 📋 System Requirements
 

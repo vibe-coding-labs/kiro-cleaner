@@ -1,11 +1,13 @@
 import React from 'react';
 import { Layout, Typography, Button, Space, Row, Col } from 'antd';
 import { DownloadOutlined, ArrowRightOutlined, ThunderboltOutlined, SafetyOutlined, CloudSyncOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import './AntHeroSection.css';
 
 const { Title, Paragraph, Text } = Typography;
 
 const AntHeroSection: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="hero-section">
       <Layout.Content style={{ padding: '80px 24px', maxWidth: 1200, margin: '0 auto' }}>
@@ -16,35 +18,35 @@ const AntHeroSection: React.FC = () => {
               {/* Badge */}
               <div className="hero-badge">
                 <Text style={{ fontSize: 14, fontWeight: 500 }}>
-                  🎉 开源免费 · 持续更新
+                  {t('hero.badge')}
                 </Text>
               </div>
 
               {/* Main Headline */}
               <div>
                 <Title level={1} style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.2, marginBottom: 8 }}>
-                  让 Kiro IDE
+                  {t('hero.title1')}
                 </Title>
                 <Title level={1} style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.2, margin: 0, color: '#1890ff' }}>
-                  轻装上阵
+                  {t('hero.title2')}
                 </Title>
               </div>
 
               {/* Subtitle */}
               <Paragraph style={{ fontSize: 18, color: 'rgba(0, 0, 0, 0.65)', marginBottom: 24, lineHeight: 1.7 }}>
-                Kiro IDE 缓存过大导致卡顿？一键清理，立即提速！
+                {t('hero.subtitle')}
               </Paragraph>
 
               {/* Key Points */}
               <Space orientation="vertical" size="small">
                 <Text style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ✓ <Text strong style={{ color: '#1890ff' }}>解决卡顿</Text>：清理冗余缓存，IDE 响应速度提升
+                  ✓ <Text strong style={{ color: '#1890ff' }}>{t('hero.benefit1')}</Text>：{t('hero.benefit1Desc')}
                 </Text>
                 <Text style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ✓ <Text strong style={{ color: '#1890ff' }}>释放空间</Text>：清理对话历史、临时文件
+                  ✓ <Text strong style={{ color: '#1890ff' }}>{t('hero.benefit2')}</Text>：{t('hero.benefit2Desc')}
                 </Text>
                 <Text style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.65)' }}>
-                  ✓ <Text strong style={{ color: '#1890ff' }}>安全可靠</Text>：自动备份，随时恢复
+                  ✓ <Text strong style={{ color: '#1890ff' }}>{t('hero.benefit3')}</Text>：{t('hero.benefit3Desc')}
                 </Text>
               </Space>
 
@@ -52,15 +54,15 @@ const AntHeroSection: React.FC = () => {
               <Space size="middle" wrap>
                 <div className="feature-tag">
                   <ThunderboltOutlined style={{ fontSize: 16, marginRight: 6 }} />
-                  快速扫描
+                  {t('hero.featureTag1')}
                 </div>
                 <div className="feature-tag">
                   <SafetyOutlined style={{ fontSize: 16, marginRight: 6 }} />
-                  安全可靠
+                  {t('hero.featureTag2')}
                 </div>
                 <div className="feature-tag">
                   <CloudSyncOutlined style={{ fontSize: 16, marginRight: 6 }} />
-                  自动备份
+                  {t('hero.featureTag3')}
                 </div>
               </Space>
 
@@ -73,7 +75,7 @@ const AntHeroSection: React.FC = () => {
                   href="#installation"
                   style={{ height: 48, fontSize: 16, fontWeight: 500, paddingLeft: 32, paddingRight: 32 }}
                 >
-                  立即开始
+                  {t('hero.ctaStart')}
                 </Button>
                 <Button 
                   size="large" 
@@ -81,7 +83,7 @@ const AntHeroSection: React.FC = () => {
                   href="#features"
                   style={{ height: 48, fontSize: 16, fontWeight: 500, paddingLeft: 32, paddingRight: 32 }}
                 >
-                  了解更多
+                  {t('hero.ctaLearnMore')}
                 </Button>
               </Space>
             </Space>
@@ -92,7 +94,7 @@ const AntHeroSection: React.FC = () => {
             <div className="video-container">
               <img
                 src={`${import.meta.env.BASE_URL}assets/demo-clean-command-3x.gif`}
-                alt="Kiro Cleaner Demo"
+                alt={t('hero.demoAlt')}
                 style={{
                   width: '100%',
                   height: 'auto',
