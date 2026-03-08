@@ -3,7 +3,8 @@
 # 变量定义
 BINARY_NAME=kiro-cleaner
 BUILD_DIR=build
-CMD_DIR=cmd/kiro-cleaner
+# 使用显式的相对路径，确保在 Go module 模式下可以正常构建
+CMD_DIR=./cmd/kiro-cleaner
 VERSION=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 COMMIT=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME=$(shell date +%Y-%m-%dT%H:%M:%SZ)

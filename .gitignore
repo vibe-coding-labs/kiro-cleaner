@@ -43,6 +43,9 @@ desktop.ini
 # GoReleaser
 dist/
 
+# Release artifacts
+release/
+
 # Test data (keep structure, ignore content)
 test-kiro-data/cache/*
 test-kiro-data/logs/*
